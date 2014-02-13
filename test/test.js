@@ -11,7 +11,7 @@ describe('empty:', function () {
   });
 });
 
-describe('banners only:', function () {
+describe('when `strip.banner` is used:', function () {
   it('should strip banners only.', function () {
     var fixture = file.readFileSync('test/fixtures/banner-strip.js');
     var actual = strip.banner(fixture);
@@ -19,6 +19,16 @@ describe('banners only:', function () {
     expect(actual).to.eql(expected);
   });
 });
+
+describe('when `strip.banner` is used, and options.safe is specified:', function () {
+  it('should strip banners, except for protected banners.', function () {
+    var fixture = file.readFileSync('test/fixtures/banner-keep.js');
+    var actual = strip.banner(fixture, {safe: true});
+    var expected = file.readFileSync('test/expected/banner-protected.js');
+    expect(actual).to.eql(expected);
+  });
+});
+
 
 describe('all except banners:', function () {
   it('should strip all block comments except banner.', function () {

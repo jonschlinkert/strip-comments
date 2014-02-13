@@ -26,8 +26,12 @@ var strip = module.exports = function(str) {
  * @return  {String}
  */
 
-strip.banner = function(str) {
+strip.banner = function(str, opts) {
+  opts = opts || {};
   var re = new RegExp('^' + reBlock + '\\s+', 'g');
+  if(opts.safe) {
+    re = new RegExp('^[^\\/\*\*?\!]' + reBlock + '\\s+', 'g');
+  }
   return str ? str.replace(re, '') : '';
 };
 

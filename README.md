@@ -78,10 +78,67 @@ Removes
  */
 var foo = function(/* and these */) {}
 ```
-Not
+Not line comments
 
 ```js
 // This comment
+```
+
+### block (safe)
+
+```js
+strip.safeBlock( str );
+```
+Removes
+
+```js
+/**
+ * this
+ * comment
+ */
+```
+but not comments with `/*!` or `/**!`
+
+```js
+/*!
+ * this
+ * comment
+ */
+```
+or line comments
+
+```js
+// This comment
+```
+
+### banners
+
+```js
+strip.banner( str );
+```
+Removes the top comment in files
+
+```js
+/**
+ * this
+ * comment
+ */
+var foo = function(/* and these */) {}
+```
+
+### banners (safe)
+
+```js
+strip.banner( str, {safe: true} );
+```
+
+Removes the top comment in files, except for those with `/*!` or `/**!`:
+
+```js
+/**!
+ * this comment won't
+ * be removed
+ */
 ```
 
 ## Tests
