@@ -4,6 +4,9 @@
  * Licensed under the MIT license.
  */
 
+var reBlock = '\\/\\*(?:(?!\\*\\/)[\\s\\S])*\\*\\/';
+var reLine =  '^\\/\\/[^\\r\\n?|\\n]*';
+
 
 /**
  * Strip all comments
@@ -17,21 +20,53 @@ var strip = module.exports = function(str) {
 
 
 /**
+ * Strip banners
+ *
+ * @param   {String}  str
+ * @return  {String}
+ */
+
+strip.banner = function(str) {
+  var re = new RegExp('^' + reBlock + '\\s+', 'g');
+  return str ? str.replace(re, '') : '';
+};
+
+
+/**
+ * Strip block comments except
+ * for banner
+ *
+ * @param   {String}  str
+ * @return  {String}
+ */
+
+strip.safeBlock = function(str) {
+  var re = new RegExp('[^\\/\*\*?\!]' + reBlock + '\\n', 'gm');
+  return str ? str.replace(re, '') : '';
+};
+
+
+/**
  * Strip block comments
+ *
  * @param   {String}  str
  * @return  {String}
  */
 
 strip.block = function(str) {
-  return str ? str.replace(/\/\*(?:(?!\*\/)[\s\S])*\*\//g, '') : '';
+  var re = new RegExp(reBlock, 'g');
+  return str ? str.replace(re, '') : '';
 };
+
 
 /**
  * Strip line comments
+ *
  * @param   {String}  str
  * @return  {String}
  */
 
 strip.line = function(str) {
-  return str ? str.replace(/\/\/[^\n|\r]*/g, '') : '';
+  var re = new RegExp(reLine, 'gm');
+  return str ? str.replace(re, '') : '';
 };

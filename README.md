@@ -1,6 +1,6 @@
 # strip-comments [![NPM version](https://badge.fury.io/js/strip-comments.png)](http://badge.fury.io/js/strip-comments)
 
-> Strip block comments or line comments from code
+> Strip comments from code. Remove both line comments and block comments.
 
 Should work with any language that uses the same syntax, e.g. JavaScript, LESS, SASS/SCSS, CSS.
 
