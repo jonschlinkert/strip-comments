@@ -1,6 +1,7 @@
 const expect = require('chai').expect;
 const file = require('fs-utils');
 const strip = require('../');
+const testDir = file.dirname(module.filename);
 
 
 describe('empty:', function () {
@@ -13,18 +14,18 @@ describe('empty:', function () {
 
 describe('when `strip.banner` is used:', function () {
   it('should strip banners only.', function () {
-    var fixture = file.readFileSync('test/fixtures/banner-strip.js');
+    var fixture = file.readFileSync(testDir + 'fixtures/banner-strip.js');
     var actual = strip.banner(fixture);
-    var expected = file.readFileSync('test/expected/banner-strip.js');
+    var expected = file.readFileSync(testDir + 'expected/banner-strip.js');
     expect(actual).to.eql(expected);
   });
 });
 
 describe('when `strip.banner` is used, and options.safe is specified:', function () {
   it('should strip banners, except for protected banners.', function () {
-    var fixture = file.readFileSync('test/fixtures/banner-keep.js');
+    var fixture = file.readFileSync(testDir + 'fixtures/banner-keep.js');
     var actual = strip.banner(fixture, {safe: true});
-    var expected = file.readFileSync('test/expected/banner-protected.js');
+    var expected = file.readFileSync(testDir + 'expected/banner-protected.js');
     expect(actual).to.eql(expected);
   });
 });
@@ -32,16 +33,16 @@ describe('when `strip.banner` is used, and options.safe is specified:', function
 
 describe('all except banners:', function () {
   it('should strip all block comments except banner.', function () {
-    var fixture = file.readFileSync('test/fixtures/banner-keep.js');
+    var fixture = file.readFileSync(testDir + 'fixtures/banner-keep.js');
     var actual = strip.safeBlock(fixture);
-    var expected = file.readFileSync('test/expected/banner-keep.js');
+    var expected = file.readFileSync(testDir + 'expected/banner-keep.js');
     expect(actual).to.eql(expected);
   });
 
   it('should strip all comments, block and line, except banner.', function () {
-    var fixture = file.readFileSync('test/fixtures/all-but-banner.js');
+    var fixture = file.readFileSync(testDir + 'fixtures/all-but-banner.js');
     var actual = strip.safeBlock(strip.line(fixture));
-    var expected = file.readFileSync('test/expected/all-but-banner.js');
+    var expected = file.readFileSync(testDir + 'expected/all-but-banner.js');
     expect(actual).to.eql(expected);
   });
 });
