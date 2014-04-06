@@ -153,6 +153,87 @@ describe('all comments:', function () {
     ], strip);
     expect(meo.output).to.eql(meo.expected);
   });
+
+  it('should not strip comment decoys in regexps.', function () {
+    var regExps, meo;
+    regExps = [
+      /\.\.\//,
+      /a\/*b*/,
+      /a\/*b/,
+      /c*/,
+    ];
+    meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '  console.dir({',
+      '    regexp0: ' + String(regExps[0]) + ',',
+      '    regexp1: ' + String(regExps[1]) + ',',
+      '    regexp2: ' + String(regExps[2]) + ',',
+      '  });',
+      '  return;',
+      '};'
+    ], strip);
+    expect(meo.output).to.eql(meo.expected);
+  });
+
+  it('should not strip comment decoys in strings.', function () {
+    var strs, meo;
+    strs = [
+      '// not a line comment',
+      '/a\/*b*/',
+      '/a\/*b/',
+      '/c*/',
+    ];
+    meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '  console.dir({',
+      '    str0: ' + JSON.stringify(strs[0]) + ',',
+      '    str1: ' + JSON.stringify(strs[1]) + ',',
+      '    str2: ' + JSON.stringify(strs[2]) + ',',
+      '    str3: ' + JSON.stringify(strs[3]) + ',',
+      '  });',
+      'return;',
+      '};'
+    ], strip);
+    expect(meo.output).to.eql(meo.expected);
+  });
+
+  it('should strip block comments behind and in statements', function () {
+    var meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '  var random = 0°<  /* :TO' + 'DO: use better PRNG*/>°;',
+      '  console.log(String(random));°<  /* also works w/o String() */>°',
+      '  return;',
+      '};'
+    ], strip);
+    expect(meo.output).to.eql(meo.expected);
+  });
+
+  it('should strip line comments behind statements', function () {
+    var meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '  var random = 0;°<    // :TO' + 'DO: use better PRNG>°',
+      '  console.log(String(random));°<  // also works w/o String()>°',
+      '  return;',
+      '};'
+    ], strip);
+    expect(meo.output).to.eql(meo.expected);
+  });
+
+  it('should strip block c. that contain line c. decoys', function () {
+    var meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '  return {°</* a block comment with a decoy',
+      '            // that might look like two',
+      '            // line comment inside */>°',
+      '    };',
+      '};'
+    ], strip);
+    meo.lintBait = {/* a block comment with a decoy
+                    // that might look like two
+                    // line comment inside */
+    };
+    expect(meo.output).to.eql(meo.expected);
+  });
 });
 
 describe('block comments:', function () {
