@@ -85,6 +85,42 @@ describe('all comments:', function () {
     var expected = '\n\n' + barFuncHead + ') {return;};\n';
     expect(actual).to.eql(expected);
   });
+
+  it('should strip all comments, even inside function body.', function () {
+    var actual = strip(barFuncHead + ') {\n' +
+      blCmt + '\n' +
+      lnCmt + '\n' +
+      'return;\n' +
+      blCmt + '\n' +
+      lnCmt + '\n' +
+      '};');
+    var expected = barFuncHead + ') {\n\n\nreturn;\n\n\n};';
+    expect(actual).to.eql(expected);
+  });
+
+  it('should strip all comments, even indented line comments.', function () {
+    var actual = strip(barFuncHead + ') {\n' +
+      blCmt + '\n' +
+      '  ' + lnCmt + '\n' +
+      'return;\n' +
+      blCmt + '\n' +
+      '\t' + lnCmt + '\n' +
+      '};');
+    var expected = barFuncHead + ') {\n\n\nreturn;\n\n\n};';
+    expect(actual).to.eql(expected);
+  });
+
+  it('should strip all comments, even indented block comments.', function () {
+    var actual = strip(barFuncHead + ') {\n' +
+      '  ' + blCmt + '\n' +
+      lnCmt + '\n' +
+      'return;\n' +
+      '\t' + blCmt + '\n' +
+      lnCmt + '\n' +
+      '};');
+    var expected = barFuncHead + ') {\n\n\nreturn;\n\n\n};';
+    expect(actual).to.eql(expected);
+  });
 });
 
 describe('block comments:', function () {
