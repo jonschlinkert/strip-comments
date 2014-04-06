@@ -4,8 +4,9 @@
  * Licensed under the MIT license.
  */
 
-var reBlock = '\\/\\*(?:(?!\\*\\/)[\\s\\S])*\\*\\/';
-var reLine =  '^\\/\\/[^\\r\\n?|\\n]*';
+var reIndent = '[ \\t\\r]*';
+var reBlock = reIndent + '\\/\\*(?:(?!\\*\\/)[\\s\\S])*\\*\\/';
+var reLine =  '^' + reIndent + '\\/\\/[^\\r\\n?|\\n]*';
 
 
 /**
