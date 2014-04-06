@@ -1,3 +1,7 @@
+/* -*- coding: UTF-8, tab-width: 2 -*- */
+/*jslint indent: 2, maxlen: 150, node: true, vars: true */
+/*global describe: true, it: true */
+
 const expect = require('chai').expect;
 const file = require('fs-utils');
 const strip = require('../');
@@ -7,6 +11,31 @@ const blCmt = '/* some block comment */';
 const lnCmt = '// some line comment';
 const barFuncHead = 'var bar = function(';
 const blExclamCmt = '/*! this is a comment */';
+
+
+function getTestData(fn) {
+  /*jslint stupid: true */
+  var src = file.readFileSync(testDir + fn);
+  /*jslint stupid: false */
+  return src;
+}
+
+
+function markedExpectedOmissions(meo, censorFunc, markChar) {
+  if (!markChar) { markChar = '°'; }
+  var eoRgx = new RegExp(markChar + '<([^' + markChar + ']*)>' + markChar, 'g');
+  if (Array.isArray(meo)) { meo = meo.join('\n'); }
+  meo = {
+    expected: meo.replace(eoRgx, ''),
+    input: meo.replace(eoRgx, '$1'),
+  };
+  if ('function' === typeof censorFunc) {
+    meo.output = censorFunc(meo.input);
+  }
+  return meo;
+}
+
+
 
 
 describe('empty:', function () {
@@ -19,18 +48,18 @@ describe('empty:', function () {
 
 describe('when `strip.banner` is used:', function () {
   it('should strip banners only.', function () {
-    var fixture = file.readFileSync(testDir + 'fixtures/banner-strip.js');
+    var fixture = getTestData('fixtures/banner-strip.js');
     var actual = strip.banner(fixture);
-    var expected = file.readFileSync(testDir + 'expected/banner-strip.js');
+    var expected = getTestData('expected/banner-strip.js');
     expect(actual).to.eql(expected);
   });
 });
 
 describe('when `strip.banner` is used, and options.safe is specified:', function () {
   it('should strip banners, except for protected banners.', function () {
-    var fixture = file.readFileSync(testDir + 'fixtures/banner-keep.js');
+    var fixture = getTestData('fixtures/banner-keep.js');
     var actual = strip.banner(fixture, {safe: true});
-    var expected = file.readFileSync(testDir + 'expected/banner-protected.js');
+    var expected = getTestData('expected/banner-protected.js');
     expect(actual).to.eql(expected);
   });
 });
@@ -38,16 +67,16 @@ describe('when `strip.banner` is used, and options.safe is specified:', function
 
 describe('all except banners:', function () {
   it('should strip all block comments except banner.', function () {
-    var fixture = file.readFileSync(testDir + 'fixtures/banner-keep.js');
+    var fixture = getTestData('fixtures/banner-keep.js');
     var actual = strip.safeBlock(fixture);
-    var expected = file.readFileSync(testDir + 'expected/banner-keep.js');
+    var expected = getTestData('expected/banner-keep.js');
     expect(actual).to.eql(expected);
   });
 
   it('should strip all comments, block and line, except banner.', function () {
-    var fixture = file.readFileSync(testDir + 'fixtures/all-but-banner.js');
+    var fixture = getTestData('fixtures/all-but-banner.js');
     var actual = strip.safeBlock(strip.line(fixture));
-    var expected = file.readFileSync(testDir + 'expected/all-but-banner.js');
+    var expected = getTestData('expected/all-but-banner.js');
     expect(actual).to.eql(expected);
   });
 });
@@ -87,46 +116,49 @@ describe('all comments:', function () {
   });
 
   it('should strip all comments, even inside function body.', function () {
-    var actual = strip(barFuncHead + ') {\n' +
-      blCmt + '\n' +
-      lnCmt + '\n' +
-      'return;\n' +
-      blCmt + '\n' +
-      lnCmt + '\n' +
-      '};');
-    var expected = barFuncHead + ') {\n\n\nreturn;\n\n\n};';
-    expect(actual).to.eql(expected);
+    var meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '°<' + blCmt + '>°',
+      '°<' + lnCmt + '>°',
+      'return;',
+      '°<' + blCmt + '>°',
+      '°<' + lnCmt + '>°',
+      '};'
+    ], strip);
+    expect(meo.output).to.eql(meo.expected);
   });
 
   it('should strip all comments, even indented line comments.', function () {
-    var actual = strip(barFuncHead + ') {\n' +
-      blCmt + '\n' +
-      '  ' + lnCmt + '\n' +
-      'return;\n' +
-      blCmt + '\n' +
-      '\t' + lnCmt + '\n' +
-      '};');
-    var expected = barFuncHead + ') {\n\n\nreturn;\n\n\n};';
-    expect(actual).to.eql(expected);
+    var meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '°<' + blCmt + '>°',
+      '°<  ' + lnCmt + '>°',
+      'return;',
+      '°<' + blCmt + '>°',
+      '°<\t' + lnCmt + '>°',
+      '};'
+    ], strip);
+    expect(meo.output).to.eql(meo.expected);
   });
 
   it('should strip all comments, even indented block comments.', function () {
-    var actual = strip(barFuncHead + ') {\n' +
-      '  ' + blCmt + '\n' +
-      lnCmt + '\n' +
-      'return;\n' +
-      '\t' + blCmt + '\n' +
-      lnCmt + '\n' +
-      '};');
-    var expected = barFuncHead + ') {\n\n\nreturn;\n\n\n};';
-    expect(actual).to.eql(expected);
+    var meo = markedExpectedOmissions([
+      barFuncHead + ') {',
+      '°<  ' + blCmt + '>°',
+      '°<' + lnCmt + '>°',
+      'return;',
+      '°<\t' + blCmt + '>°',
+      '°<' + lnCmt + '>°',
+      '};'
+    ], strip);
+    expect(meo.output).to.eql(meo.expected);
   });
 });
 
 describe('block comments:', function () {
   it('should strip block comments from a function.', function () {
-    var actual = strip.block('' + barFuncHead + blCmt + ') {return;};');
-    var expected = '' + barFuncHead + ') {return;};';
+    var actual = strip.block(barFuncHead + blCmt + ') {return;};');
+    var expected = barFuncHead + ') {return;};';
     expect(actual).to.eql(expected);
   });
 
@@ -140,7 +172,7 @@ describe('block comments:', function () {
   it('should strip block comments before, after and from a function.', function () {
     var actual = strip.block(blCmt + barFuncHead + blCmt + ') {return;};\n' +
       blCmt);
-    var expected = '' + barFuncHead + ') {return;};\n';
+    var expected = barFuncHead + ') {return;};\n';
     expect(actual).to.eql(expected);
   });
 });
