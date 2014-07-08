@@ -1,4 +1,4 @@
-# strip-comments [![NPM version](https://badge.fury.io/js/strip-comments.png)](http://badge.fury.io/js/strip-comments)
+# strip-comments [![NPM version](https://badge.fury.io/js/strip-comments.svg)](http://badge.fury.io/js/strip-comments)
 
 > Strip comments from code. Remove both line comments and block comments.
 
@@ -18,128 +18,134 @@ Should work with any language that uses the same syntax, e.g. JavaScript, LESS, 
  npm install strip-comments --save
  ```
 
-## Usage
+## API
+### Table of contents
+- [strip](#stripstr-opts)
+- [strip.block()](#stripblockstr-opts)
+- [strip.line()](#striplinestr-opts)
 
-```js
-var strip = require('strip-comments');
-```
+### strip(str[, opts])
+Strip all comments
 
-### all comments
+- `str` **{String}** file content or string to strip to
+- `opts` **{Object}** options are passed to `.block`, and `.line`
+- `return` **{String}**
 
-```js
-strip( str );
-```
-Removes
-
-```js
-// This comment
-```
-and
-
-```js
-/**
- * this
- * comment
- */
-var foo = function(/* and these */) {}
-```
-
-### line comments
-
-```js
-strip.line( str );
-```
-Removes
-
-```js
-// This comment
-```
-Not
-
-```js
-/**
- * this
- * comment
- */
-var foo = function(/* and these */) {}
-```
-
-### block comments
-
-```js
-strip.block( str );
-```
-Removes
-
-```js
-/**
- * this
- * comment
- */
-var foo = function(/* and these */) {}
-```
-Not line comments
-
-```js
-// This comment
-```
-
-### block (safe)
-
-```js
-strip.safeBlock( str );
-```
-Removes
-
-```js
-/**
- * this
- * comment
- */
-```
-but not comments with `/*!` or `/**!`
-
+**Example:**
 ```js
 /*!
- * this
- * comment
+ * this multiline
+ * block comment ('top banner')
  */
+
+'use strict';
+
+/**!
+ * and this multiline
+ * block comment
+ */
+var foo = function(/* and these single-line block comment */) {};
+
+/**
+ * and this multiline
+ * block comment
+ */
+var bar = function(/* and these single-line block comment */) {};
+
+// this single-line line comment
+var baz = function () {
+  // this multiline
+  // line comment
+  var some = true;
+  //this
+  var fafa = true; //and this
+  // var also = 'that';
+  var but = 'not'; //! that comment
+};
+
+// also this multiline
+// line comment
+var fun = false;
 ```
-or line comments
+
+**Source:**
 
 ```js
-// This comment
+var strip = module.exports = function(str, opts) {
+  return str ? strip.block(strip.line(str, opts), opts) : '';
+};
 ```
 
-### banners
+### strip.block(str[, opts])
+Strip only block comments
 
-```js
-strip.banner( str );
-```
-Removes the top comment in files
+- `str` **{String}** file content or string to strip to
+- `opts` **{Object}** if `safe:true`, strip only that not starts with `/*!` or `/**!`
+- `return` **{String}**
+
+**Example:**
 
 ```js
 /**
- * this
- * comment
+ * this multiline
+ * block comment
  */
-var foo = function(/* and these */) {}
+var bar = function(/* and these single-line block comment */) {
+  /**
+   * also that comment
+   */
+  var str = 'something'
+};
 ```
 
-### banners (safe)
+**Source:**
 
 ```js
-strip.banner( str, {safe: true} );
+strip.block = function(str, opts) {
+  opts = opts || {};
+  var re = new RegExp(reBlock + reBlockEnd, 'gm');
+  if(opts.safe) {
+    re = new RegExp(reBlockIgnore + reBlockEnd, 'gm');
+  }
+  return str ? str.replace(re, '') : '';
+};
 ```
 
-Removes the top comment in files, except for those with `/*!` or `/**!`:
+### strip.line(str[, opts])
+Strip only line comments
+
+- `str` **{String}** file content or string to strip to
+- `opts` **{Object}** if `safe:true`, strip all that not starts with `//!`
+- `return` **{String}**
+
+**Example:**
 
 ```js
-/**!
- * this comment won't
- * be removed
- */
+// this single-line line comment
+var baz = function () {
+  // this multiline
+  // line comment
+  var some = true;
+  //this
+  var fafa = true; //and this
+  // var also = 'that';
+  var but = 'not'; //! that comment
+};
 ```
+
+**Source:**
+
+```js
+strip.line = function(str, opts) {
+  opts = opts || {};
+  var re = new RegExp(reLine, 'gm');
+  if(opts.safe) {
+    re = new RegExp(reLineIgnore, 'gm');
+  }
+  return str ? str.replace(re, '') : '';
+};
+```
+
 
 ## Tests
 
