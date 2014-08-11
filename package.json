@@ -1,7 +1,7 @@
 {
   "name": "strip-comments",
   "description": "Strip comments from code. Remove both line comments and block comments.",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha"
