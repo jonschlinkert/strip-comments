@@ -1,76 +1,64 @@
-/**
+/*!
  * strip-comments <https://github.com/jonschlinkert/strip-comments>
+ * 
  * Copyright (c) 2014 Jon Schlinkert, contributors.
  * Licensed under the MIT license.
  */
 
-var reBlock = '\\/\\*(?:(?!\\*\\/)[\\s\\S])*\\*\\/';
-var reLine =  '^\\/\\/[^\\r\\n?|\\n]*';
-
+var reBlock = '\\/\\*';
+var reBlockIgnore = '\\/\\*(?!\\*?\\!)';
+var reBlockEnd = '(.|[\\r\\n]|\\n)*?\\*\\/\\n?\\n?';
+var reLine =  '(\\/\\/.*)';
+var reLineIgnore =  '(\\/\\/(?!\\!).*)';
 
 /**
+ * ### strip(str[, opts])
  * Strip all comments
- * @param   {String}  str
+ * 
+ * @param   {String}  str  file content or string to strip to
+ * @param   {Object}  opts  options are passed to `.block`, and `.line`
  * @return  {String}
+ * @api public
  */
 
-var strip = module.exports = function(str) {
-  return str ? strip.block(strip.line(str)) : '';
+var strip = module.exports = function(str, opts) {
+  return str ? strip.block(strip.line(str, opts), opts) : '';
 };
 
-
 /**
- * Strip banners
+ * ### strip.block(str[, opts])
+ * Strip only block comments
  *
- * @param   {String}  str
+ * @param   {String}  str  file content or string to strip to
+ * @param   {Object}  opts  if `safe:true`, strip only that not starts with `/*!` or `/**!`
  * @return  {String}
+ * @api public
  */
 
-strip.banner = function(str, opts) {
+strip.block = function(str, opts) {
   opts = opts || {};
-  var re = new RegExp('^' + reBlock + '\\s+', 'g');
+  var re = new RegExp(reBlock + reBlockEnd, 'gm');
   if(opts.safe) {
-    re = new RegExp('^[^\\/\*\*?\!]' + reBlock + '\\s+', 'g');
+    re = new RegExp(reBlockIgnore + reBlockEnd, 'gm');
   }
   return str ? str.replace(re, '') : '';
 };
 
-
 /**
- * Strip block comments except
- * for banner
+ * ### strip.line(str[, opts])
+ * Strip only line comments
  *
- * @param   {String}  str
+ * @param   {String}  str  file content or string to strip to
+ * @param   {Object}  opts  if `safe:true`, strip all that not starts with `//!`
  * @return  {String}
+ * @api public
  */
 
-strip.safeBlock = function(str) {
-  var re = new RegExp('[^\\/\*\*?\!]' + reBlock + '\\n', 'gm');
-  return str ? str.replace(re, '') : '';
-};
-
-
-/**
- * Strip block comments
- *
- * @param   {String}  str
- * @return  {String}
- */
-
-strip.block = function(str) {
-  var re = new RegExp(reBlock, 'g');
-  return str ? str.replace(re, '') : '';
-};
-
-
-/**
- * Strip line comments
- *
- * @param   {String}  str
- * @return  {String}
- */
-
-strip.line = function(str) {
+strip.line = function(str, opts) {
+  opts = opts || {};
   var re = new RegExp(reLine, 'gm');
+  if(opts.safe) {
+    re = new RegExp(reLineIgnore, 'gm');
+  }
   return str ? str.replace(re, '') : '';
 };
