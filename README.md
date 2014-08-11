@@ -32,6 +32,7 @@ Strip all comments
 - `return` **{String}**
 
 **Example:**
+
 ```js
 /*!
  * this multiline
@@ -44,13 +45,13 @@ Strip all comments
  * and this multiline
  * block comment
  */
-var foo = function(/* and these single-line block comment */) {};
+var foo = function(/* and these single-line block comments */) {};
 
 /**
  * and this multiline
  * block comment
  */
-var bar = function(/* and these single-line block comment */) {};
+var bar = function(/* and these single-line block comments */) {};
 
 // this single-line line comment
 var baz = function () {

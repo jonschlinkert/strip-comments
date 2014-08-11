@@ -1,5 +1,7 @@
-const fs = require('fs');
-const strip = require('../index')
+'use stric';
+
+var fs = require('fs');
+var strip = require('../index')
 
 function read(src) {
   var str = fs.readFileSync('./' + src,'utf-8');
