@@ -1,4 +1,4 @@
-'use stric';
+'use strict';
 
 var fs = require('fs');
 var strip = require('../index');
