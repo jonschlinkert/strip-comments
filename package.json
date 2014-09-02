@@ -1,7 +1,7 @@
 {
   "name": "strip-comments",
   "description": "Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": {
     "name": "Jon Schlinkert",
