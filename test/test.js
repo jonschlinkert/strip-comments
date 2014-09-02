@@ -108,6 +108,23 @@ describe('line comments:', function () {
     normalize(actual).should.eql(normalize(expected));
   });
 
+  it('should not strip URLs in a variable.', function () {
+    var actual = strip.line('var foo = "http://github.com"; //                           this should be stripped');
+    var expected = 'var foo = "http://github.com";';
+    normalize(actual).should.eql(normalize(expected));
+  });
+
+  it('should strip URLs in a line comment.', function () {
+    var actual = strip.line('// http://github.com"');
+    var expected = '';
+    normalize(actual).should.eql(normalize(expected));
+  });
+
+  it('should strip URLs in a block comment.', function () {
+    var actual = strip.block('/**\n* http://github.com\n *\n */');
+    var expected = '';
+    normalize(actual).should.eql(normalize(expected));
+  });
 
   it('should strip line comments before a function, and not block comments.', function () {
     var actual = strip.line('/* this is a comment */\n//this is a comment\nvar bar = function(/*this is a comment*/) {return;};');
