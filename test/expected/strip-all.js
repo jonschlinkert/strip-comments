@@ -6,13 +6,13 @@ var bar = function() {};
 
 
 var baz = function() {
-  
-  
+
+
   var some = true;
-  
-  var fafa = true; 
-  
-  var but = 'not'; 
+
+  var fafa = true;
+
+  var but = 'not';
 };
 
 

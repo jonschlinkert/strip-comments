@@ -1,11 +1,7 @@
 {
   "name": "strip-comments",
-  "description": "Strip comments from code. Remove both line comments and block comments.",
-  "version": "0.2.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "node_modules/mocha/bin/mocha"
-  },
+  "description": "Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.",
+  "version": "0.3.0",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": {
     "name": "Jon Schlinkert",
@@ -18,25 +14,37 @@
   "bugs": {
     "url": "https://github.com/jonschlinkert/strip-comments/issues"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/jonschlinkert/strip-comments/blob/master/LICENSE-MIT"
-  }],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jonschlinkert/strip-comments/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec"
+  },
   "devDependencies": {
-    "should": "~4.0.4",
-    "mocha": "~1.20.1"
+    "mocha": "*",
+    "should": "^4.0.4",
+    "verb": "^0.2.15",
+    "verb-tag-jscomments": "^0.2.2"
   },
   "keywords": [
+    "block",
     "comment",
     "comments",
+    "expressions",
+    "line",
+    "protected",
+    "re",
+    "regex",
+    "regexp",
+    "regular",
     "remove",
-    "remove comments",
-    "strip comment",
-    "strip comments",
-    "strip",
-    "block comments",
-    "line comments",
-    "strip block comments",
-    "strip line comments"
-  ]
+    "strip"
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  }
 }
