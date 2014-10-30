@@ -22,7 +22,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha --require should"
   },
   "devDependencies": {
     "mocha": "*",

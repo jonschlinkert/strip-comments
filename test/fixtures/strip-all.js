@@ -31,3 +31,5 @@ var baz = function() {
 // also this multiline
 // line comment
 var fun = false;
+var path = '/path/to/*/something/that/not/be/stripped.js';
+var globstar = '/path/to/globstar/not/be/stripped/**/*.js';
