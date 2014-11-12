@@ -75,13 +75,13 @@ console.log(strip("foo /* me too */"));
 
 ## CLI
 > The CLI, yeah. For now not supports `safe:true` option.  
-You can see CLI [tests](./test/test.js#L189), [fixture used](./test/fixtures/strip-comments.js), [actual](./test/actual) and [expected](./test/expected) output files `strip-comments-*.js`
+You can see CLI [tests](./test/test.js#L189), [fixture used](./test/fixtures/strip-comments.js) (*same as index, notice line comments*), [actual](./test/actual) and [expected](./test/expected) output files `strip-comments-*.js`
 
 ### [stripComments](cli.js)
 
-- `-i`|`--input` <filepath> input file
-- `-o`|`--output` <filepath> output file
-- `-s`|`--strip` [method] available values are "all", "block" and "line", default "all"
+- `-i`|`--input` `<filepath>` input file
+- `-o`|`--output` `<filepath>` output file
+- `-s`|`--strip` `[method]` available values are "all", "block" and "line", default "all"
 
 ```bash
 $ stripComments --input <filepath> --output <filepath> --strip [method]
