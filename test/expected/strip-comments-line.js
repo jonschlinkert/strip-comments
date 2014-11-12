@@ -7,7 +7,6 @@
 
 'use stric';
 
-//line comment
 var reBlock = /\/\*(?!\/)(.|[\r\n]|\n)+?\*\/\n?\n?/gm
 var reBlockIgnore = /\/\*(?!(\*?\/|\*?\!))(.|[\r\n]|\n)+?\*\/\n?\n?/gm
 var reLine = /(^|[^\S\n])(?:\/\/)([\s\S]+?)$/gm;
