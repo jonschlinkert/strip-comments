@@ -29,6 +29,36 @@ describe('strip:', function () {
     var expected = 'foo // this is a comment\n';
     normalize(actual).should.eql(normalize(expected));
   });
+
+  it('should strip all but not `/*/`', function() {
+    var actual = strip("/* I will be stripped */\nvar path = '/and/this/*/not/be/stripped';")
+    var expected = "\nvar path = '/and/this/*/not/be/stripped';"
+    normalize(actual).should.eql(normalize(expected));
+  })
+
+  it('should strip all but not globstars `/**/*` #1', function() {
+    var actual = strip("var path = './path/to/scripts/**/*.js';")
+    var expected = "var path = './path/to/scripts/**/*.js';"
+    normalize(actual).should.eql(normalize(expected));
+  })
+
+  it('should strip all but not globstars `/**/` #2 and `//!` line comments (safe:true)', function() {
+    var actual = strip("var partPath = './path/*/to/scripts/**/'; //! line comment", {safe:true})
+    var expected = "var partPath = './path/*/to/scripts/**/'; //! line comment"
+    normalize(actual).should.eql(normalize(expected));
+  })
+
+  it('should strip all but not `/*/*something` from anywhere', function() {
+    var actual = strip("var partPath = './path/*/*something/test.txt';")
+    var expected = "var partPath = './path/*/*something/test.txt';"
+    normalize(actual).should.eql(normalize(expected));
+  })
+
+  it('should strip all but not `/*/*something/*.js` from anywhere (globstar-like)', function() {
+    var actual = strip("var partPath = './path/*/*something/*.js';")
+    var expected = "var partPath = './path/*/*something/*.js';"
+    normalize(actual).should.eql(normalize(expected));
+  })
 });
 
 describe('strip all or empty:', function () {
