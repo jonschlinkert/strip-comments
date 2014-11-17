@@ -27,6 +27,13 @@ function cli(args, cb) {
   });
 }
 
+it('should leave alone code without any comments', function() {
+  var fixture = read('test/fixtures/no-comments.js')
+  var actual = strip(fixture)
+  var expected = read('test/fixtures/no-comments.js')
+  actual.should.eql(expected)
+})
+
 
 describe('strip:', function () {
   it('should strip all comments.', function () {
