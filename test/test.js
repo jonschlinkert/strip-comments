@@ -59,6 +59,13 @@ describe('strip:', function () {
     var expected = "var partPath = './path/*/*something/*.js';"
     normalize(actual).should.eql(normalize(expected));
   })
+
+  it('should leave alone code without any comments', function() {
+    var fixture = read('test/fixtures/no-comment.js');
+    var actual = strip(fixture);
+    var expected = fixture;
+    actual.should.eql(expected);
+  })
 });
 
 describe('strip all or empty:', function () {
