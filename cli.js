@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-var pkg = require('./package.json');
 var fs = require('fs');
 var program = require('commander');
-var strip = require('./index.js');
+var strip = require('./');
+var pkg = require('./package.json');
 
-function resolveStrip ( type ) {
+function resolveStrip(type) {
   return strip[type] ? strip[type] : strip;
 }
 
@@ -17,6 +17,6 @@ program
 
 program.parse(process.argv);
 
-if ( program.output && program.input) {
+if (program.output && program.input) {
   fs.writeFileSync(program.output, resolveStrip(program.strip)(fs.readFileSync(program.input, 'utf8')), 'utf8');
 }

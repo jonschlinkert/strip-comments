@@ -2,20 +2,11 @@
 
 > Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.
 
-**Example:**
-
-```js
-console.log(strip("foo // this is a comment\n/* me too */"));
-//=> 'foo // this is a comment\n'
-```
-
-
-
 ## Install
-### Install with [npm](npmjs.org):
+## Install with [npm](npmjs.org)
 
 ```bash
-npm i strip-comments --save-dev
+npm i strip-comments --save
 ```
 
 ## Run tests
@@ -33,7 +24,45 @@ console.log(strip('Hey! // foo'));
 ```
 
 ## API
-undefined
+### [strip](index.js#L34)
+
+Strip both block and line comments from the given `str`.
+
+* `str` **{String}**    
+* `opts` **{Object}**: When `safe: true` comments with `//!` or `/*!` are preserved    
+* `returns` **{String}**: String without block comments.  
+
+```js
+strip('abc // foo bar baz\n/* quux fez *\/');
+//=> 'abc '
+```
+
+### [.block](index.js#L78)
+
+Strip block comments from the given `str`.
+
+* `str` **{String}**    
+* `opts` **{Object}**: When `safe: true` comments with `/*!` are preserved    
+* `returns`: {String}  
+
+```js
+strip.block('abc // foo bar baz\n/* quux fez *\/');
+//=> 'abc '
+```
+
+### [.line](index.js#L124)
+
+Strip line comments from the given `str`.
+
+* `str` **{String}**    
+* `opts` **{Object}**: When `safe: true` comments with `//!` are preserved    
+* `returns`: {String}  
+
+```js
+strip.line('abc // foo bar baz\n/* quux fez *\/');
+//=> 'abc \n/* quux fez *\/'
+```
+
 
 
 ## CLI
@@ -52,6 +81,7 @@ undefined
 - `-i`|`--input` `<filepath>` input file
 - `-o`|`--output` `<filepath>` output file
 - `-s`|`--strip` `[method]` available values are "all", "block" and "line", default "all"
+
 
 ```bash
 $ strip --input <filepath> --output <filepath> --strip [method]
