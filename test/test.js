@@ -14,7 +14,7 @@ function normalize(str) {
 }
 
 function cli(args, cb) {
-  var proc = spawn('stripComments', args, {
+  var proc = spawn('strip', args, {
     stdio: 'inherit'
   });
   proc.on('error', function(err) {
@@ -35,11 +35,6 @@ describe('strip:', function () {
     normalize(actual).should.equal(normalize('foo'));
   });
 
-  it('should strip line comments.', function () {
-    var actual = strip.line("foo // this is a comment\n/* me too */");
-    normalize(actual).should.equal(normalize('foo\n/* me too */'));
-  });
-
   it('should strip block comments.', function () {
     var actual = strip.block("foo // this is a comment\n/* me too */");
     normalize(actual).should.equal(normalize('foo // this is a comment\n'));
@@ -55,11 +50,6 @@ describe('strip:', function () {
     normalize(actual).should.equal(normalize("var path = './path/to/scripts/**/*.js';"));
   });
 
-  it('should strip all but not globstars `/**/` #2 and `//!` line comments (safe:true)', function() {
-    var actual = strip("var partPath = './path/*/to/scripts/**/'; //! line comment", {safe:true});
-    normalize(actual).should.equal(normalize("var partPath = './path/*/to/scripts/**/'; //! line comment"));
-  });
-
   it('should strip all but not `/*/*something` from anywhere', function() {
     var actual = strip("var partPath = './path/*/*something/test.txt';");
     normalize(actual).should.equal(normalize("var partPath = './path/*/*something/test.txt';"));
@@ -68,11 +58,6 @@ describe('strip:', function () {
   it('should strip all but not `/*/*something/*.js` from anywhere (globstar-like)', function() {
     var actual = strip("var partPath = './path/*/*something/*.js';");
     normalize(actual).should.equal(normalize("var partPath = './path/*/*something/*.js';"));
-  });
-
-  it('should leave alone code without any comments', function() {
-    var fixture = read('test/fixtures/no-comment.js');
-    strip(fixture).should.equal(fixture);
   });
 });
 
@@ -115,15 +100,36 @@ describe('block comments:', function () {
 });
 
 describe('comment-like patterns:', function () {
-  it.only('should not strip comment-like code that is not a comment:', function() {
+  it('should not strip comment-like code that is not a comment:', function() {
     var fixture = read('test/fixtures/literals/comment-like.js');
-    console.log(strip(fixture))
-    // console.log(read('test/expected/comment-like.js'))
-    // strip(fixture).should.equal(read('test/expected/comment-like.js'));
+    var actual = strip(fixture);
+    normalize(actual).should.equal(normalize(read('test/expected/comment-like.js')));
+  });
+
+  it('should not strip string literals that are similar to comments:', function() {
+    var fixture = read('test/fixtures/literals/string.js');
+    var actual = strip(fixture);
+    normalize(actual).should.equal(normalize(read('test/expected/string.js')));
+  });
+
+  it('should not strip literals that are similar to comments:', function() {
+    var fixture = read('test/fixtures/literals/all.js');
+    var actual = strip(fixture);
+    normalize(actual).should.equal(normalize(read('test/expected/all.js')));
   });
 });
 
 describe('line comments:', function () {
+  it('should strip all but not globstars `/**/` #2 and `//!` line comments (safe:true)', function() {
+    var actual = strip.line("var partPath = './path/*/to/scripts/**/'; //! line comment", {safe:true});
+    normalize(actual).should.equal(normalize("var partPath = './path/*/to/scripts/**/'; //! line comment"));
+  });
+
+  it('should strip line comments.', function () {
+    var actual = strip.line("foo // this is a comment\n/* me too */");
+    normalize(actual).should.equal(normalize('foo\n/* me too */'));
+  });
+
   it('should strip line comments.', function () {
     var actual = strip.line('// this is a line comment\nvar bar = function(/*this is a comment*/) {return;};');
     normalize(actual).should.equal(normalize('\nvar bar = function(/*this is a comment*/) {return;};'));
@@ -177,69 +183,69 @@ describe('line comments:', function () {
   });
 });
 
-// describe('cli support', function() {
-//   it('should strip all multiline, singleline, block and line comments.', function (done) {
-//     this.timeout(10000);
+describe.skip('cli support', function() {
+  it('should strip all multiline, singleline, block and line comments.', function (done) {
+    this.timeout(10000);
 
-//     var args = [
-//       './cli.js',
-//       '--input', 'test/fixtures/strip-comments.js',
-//       '--output', 'test/actual/strip-comments-all.js',
-//       '--strip "all"'
-//     ];
+    var args = [
+      './cli.js',
+      '--input', 'test/fixtures/strip-comments.js',
+      '--output', 'test/actual/strip-comments-all.js',
+      '--strip "all"'
+    ];
 
-//     cli(args, function(e) {
-//       if (!e) {
-//         var actual = read('test/actual/strip-comments-all.js');
-//         var expected = read('test/expected/strip-comments-all.js');
-//         normalize(actual).should.equal(normalize(expected));
-//         done();
-//         return;
-//       }
-//       done(e);
-//     });
-//   });
+    cli(args, function(e) {
+      if (!e) {
+        var actual = read('test/actual/strip-comments-all.js');
+        var expected = read('test/expected/strip-comments-all.js');
+        normalize(actual).should.equal(normalize(expected));
+        done();
+        return;
+      }
+      done(e);
+    });
+  });
 
-//   it('should strip only all block comments.', function (done) {
-//     this.timeout(10000);
+  it('should strip only all block comments.', function (done) {
+    this.timeout(10000);
 
-//     var args = [
-//       './cli.js',
-//       '--input', 'test/fixtures/strip-comments.js',
-//       '--output', 'test/actual/strip-comments-block.js',
-//       '--strip "block"'
-//     ];
+    var args = [
+      './cli.js',
+      '--input', 'test/fixtures/strip-comments.js',
+      '--output', 'test/actual/strip-comments-block.js',
+      '--strip "block"'
+    ];
 
-//     cli(args, function(e) {
-//       if (!e) {
-//         var actual = read('test/actual/strip-comments-block.js');
-//         var expected = read('test/expected/strip-comments-block.js');
-//         normalize(actual).should.equal(normalize(expected));
-//         done();
-//         return;
-//       }
-//       done(e);
-//     });
-//   });
-//   it('should strip only all line comments', function (done) {
-//     this.timeout(10000);
+    cli(args, function(e) {
+      if (!e) {
+        var actual = read('test/actual/strip-comments-block.js');
+        var expected = read('test/expected/strip-comments-block.js');
+        normalize(actual).should.equal(normalize(expected));
+        done();
+        return;
+      }
+      done(e);
+    });
+  });
+  it('should strip only all line comments', function (done) {
+    this.timeout(10000);
 
-//     var args = [
-//       './cli.js',
-//       '--input', 'test/fixtures/strip-comments.js',
-//       '--output', 'test/actual/strip-comments-line.js',
-//       '--strip "line"'
-//     ];
+    var args = [
+      './cli.js',
+      '--input', 'test/fixtures/strip-comments.js',
+      '--output', 'test/actual/strip-comments-line.js',
+      '--strip "line"'
+    ];
 
-//     cli(args, function(e) {
-//       if (!e) {
-//         var actual = read('test/actual/strip-comments-line.js');
-//         var expected = read('test/expected/strip-comments-line.js');
-//         normalize(actual).should.equal(normalize(expected));
-//         done();
-//         return;
-//       }
-//       done(e);
-//     });
-//   });
-// });
+    cli(args, function(e) {
+      if (!e) {
+        var actual = read('test/actual/strip-comments-line.js');
+        var expected = read('test/expected/strip-comments-line.js');
+        normalize(actual).should.equal(normalize(expected));
+        done();
+        return;
+      }
+      done(e);
+    });
+  });
+});

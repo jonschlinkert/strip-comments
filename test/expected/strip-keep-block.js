@@ -1,14 +1,13 @@
 /*!
+ * BANNER1
  * strip this multiline
  * block comment
  */
 'use strict';
 
-/**!
- * and this multiline
- * block comment
- */
+
 var foo = function() {};
+
 
 var bar = function() {};
 
@@ -26,7 +25,5 @@ var baz = function() {
 // also this multiline
 // line comment
 var fun = false;
-
 var path = '/path/to/*/something/that/not/be/stripped.js';
-
 var globstar = '/path/to/globstar/not/be/stripped/**/*.js';

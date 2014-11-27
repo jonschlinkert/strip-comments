@@ -1,14 +1,20 @@
 var re = {};
 
+
 re.slash = '\\/';
+
 
 re.dotSlash = '\\.\\/';
 
+
 re.all = '(?:(?!(?:\\/|^)\\.).)*?';
+
 
 re.or = '|';
 
+
 re.star = '[^\\/]*';
+
 
 re.starDot = '(?!\\.)(?=.)' + re.star + '?\\.';
 
@@ -26,6 +32,8 @@ var fails = ". // ' \\ . // ' \\ .";
 var fails = ". // \''\" \\ . // ' \\ .";
 
 
+
+
 assemble.pages('foo/bar/*.baz');
 assemble.pages('foo/**/*.baz');
 assemble.pages("foo/**/*.baz");
@@ -37,6 +45,5 @@ var config = {
   foo: 'bar',
   bar: '**/*.baz',
   vaz: '/**/*.*/**/*.js',
-  vaz: '/**/*.js'
+  fez: '/**/*.js'
 };
-
