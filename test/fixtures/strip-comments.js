@@ -7,7 +7,7 @@
 
 'use stric';
 
-//line comment
+//line comment 1
 var reBlock = /\/\*(?!\/)(.|[\r\n]|\n)+?\*\/\n?\n?/gm
 var reBlockIgnore = /\/\*(?!(\*?\/|\*?\!))(.|[\r\n]|\n)+?\*\/\n?\n?/gm
 var reLine = /(^|[^\S\n])(?:\/\/)([\s\S]+?)$/gm;
@@ -25,6 +25,7 @@ var reLineIgnore = /(^|[^\S\n])(?:\/\/[^!])([\s\S]+?)$/gm;
  * @api public
  */
 
+//line comment 2
 var strip = module.exports = function(str, opts) {
   return str ? strip.block(strip.line(str, opts), opts) : '';
 };
@@ -42,6 +43,8 @@ var strip = module.exports = function(str, opts) {
  * @api public
  */
 
+//line
+//comment 3
 strip.block = function(str, opts) {
   opts = opts || {};
   var re = reBlock //new RegExp(reBlock + reBlockEnd, 'gm');
@@ -63,6 +66,8 @@ strip.block = function(str, opts) {
  * @api public
  */
 
+//line
+//comment 4
 strip.line = function(str, opts) {
   opts = opts || {};
   var re = reLine;

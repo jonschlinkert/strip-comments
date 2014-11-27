@@ -1,5 +1,6 @@
 'use strict';
 
+var spawn = require('child_process').spawn;
 var fs = require('fs');
 var strip = require('../index');
 
@@ -10,6 +11,29 @@ function read(src) {
 function normalize(str) {
   return str.replace(/[\n\r\s]+/g, '');
 }
+function cli(args, cb) {
+  var proc = spawn('stripComments', args, {
+    stdio: 'inherit'
+  });
+  proc.on('error', function(err) {
+    cb(err)
+  });
+  proc.on('exit', function (code) {
+    if (code !== 0) {
+      cb(code)
+      return;
+    }
+    cb();
+  });
+}
+
+it('should leave alone code without any comments', function() {
+  var fixture = read('test/fixtures/no-comments.js')
+  var actual = strip(fixture)
+  var expected = read('test/fixtures/no-comments.js')
+  actual.should.eql(expected)
+})
+
 
 describe('strip:', function () {
   it('should strip all comments.', function () {
@@ -173,5 +197,71 @@ describe('line comments:', function () {
     var actual = strip.line('/* this is a comment */\n//this is a comment\nvar bar = function(/*this is a comment*/) {return;};\n//this is a line comment');
     var expected = '/* this is a comment */\n\nvar bar = function(/*this is a comment*/) {return;};\n';
     normalize(actual).should.eql(normalize(expected));
+  });
+});
+
+describe('cli support', function() {
+  it('should strip all multiline, singleline, block and line comments.', function (done) {
+    this.timeout(10000);
+
+    var args = [
+      './cli.js',
+      '--input', 'test/fixtures/strip-comments.js',
+      '--output', 'test/actual/strip-comments-all.js',
+      '--strip "all"'
+    ];
+    
+    cli(args, function(e) {
+      if (!e) {
+        var actual = read('test/actual/strip-comments-all.js');
+        var expected = read('test/expected/strip-comments-all.js');
+        normalize(actual).should.eql(normalize(expected));
+        done();
+        return;
+      }
+      done(e)
+    })
+  });
+  it('should strip only all block comments.', function () {
+    this.timeout(10000);
+    
+    var args = [
+      './cli.js',
+      '--input', 'test/fixtures/strip-comments.js',
+      '--output', 'test/actual/strip-comments-block.js',
+      '--strip "block"'
+    ];
+    
+    cli(args, function(e) {
+      if (!e) {
+        var actual = read('test/actual/strip-comments-block.js');
+        var expected = read('test/expected/strip-comments-block.js');
+        normalize(actual).should.eql(normalize(expected));
+        done();
+        return;
+      }
+      done(e)
+    })
+  });
+  it('should strip only all line comments', function () {
+    this.timeout(10000);
+    
+    var args = [
+      './cli.js',
+      '--input', 'test/fixtures/strip-comments.js',
+      '--output', 'test/actual/strip-comments-line.js',
+      '--strip "line"'
+    ];
+    
+    cli(args, function(e) {
+      if (!e) {
+        var actual = read('test/actual/strip-comments-line.js');
+        var expected = read('test/expected/strip-comments-line.js');
+        normalize(actual).should.eql(normalize(expected));
+        done();
+        return;
+      }
+      done(e)
+    })
   });
 });
