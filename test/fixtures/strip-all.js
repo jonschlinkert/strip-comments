@@ -1,21 +1,24 @@
 /*!
+ * BANNER1
  * strip this multiline
  * block comment
  */
 'use strict';
 
 /**!
+ * ABC
  * and this multiline
  * block comment
  */
-var foo = function(/* and these single-line block comment */) {};
+var foo = function(/* and these single-line block comments */) {};
 
 /**
+ * DEF
  * and this
  * multiline block
  * comment
  */
-var bar = function(/* and that */) {};
+var bar = function(/* and this */) {};
 
 // this single-line line comment
 var baz = function() {

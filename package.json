@@ -20,18 +20,22 @@
       "url": "https://github.com/jonschlinkert/strip-comments/blob/master/LICENSE-MIT"
     }
   ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
   "main": "index.js",
   "scripts": {
     "test": "mocha --require should"
+  },
+  "bin": {
+    "strip": "cli.js"
   },
   "dependencies": {
     "commander": "*"
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "^4.0.4",
-    "verb": "^0.2.15",
-    "verb-tag-jscomments": "^0.2.2"
+    "should": "^4.0.4"
   },
   "keywords": [
     "block",
@@ -46,11 +50,5 @@
     "regular",
     "remove",
     "strip"
-  ],
-  "engines": {
-    "node": ">=0.10.0"
-  },
-  "bin": {
-    "stripComments": "cli.js"
-  }
+  ]
 }

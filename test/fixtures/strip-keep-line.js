@@ -1,4 +1,5 @@
 /**
+ * BANNER2
  * this block comment
  * will not be striped
  */
@@ -10,6 +11,7 @@
 var foo = function(/* and these single-line block comment */) {};
 
 /**
+ * GHI
  * and this
  * multiline block
  * comment
@@ -22,7 +24,7 @@ var baz = function() {
   // line comment
   var some = true;
   // will be
-  var fafa = true; 
+  var fafa = true;
   // var removed = 'yes';
   var but = 'not'; //! that comment
 };
