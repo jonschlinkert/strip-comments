@@ -1,95 +1,96 @@
 'use strict';
 
-var spawn = require('child_process').spawn;
 var fs = require('fs');
-var strip = require('../index');
+var spawn = require('child_process').spawn;
+var should = require('should');
+var strip = require('..');
 
-function read(src) {
-  var str = fs.readFileSync('./' + src,'utf-8');
-  return str;
+function read(fp) {
+  return fs.readFileSync(fp, 'utf-8');
 }
+
 function normalize(str) {
   return str.replace(/[\n\r\s]+/g, '');
 }
+
 function cli(args, cb) {
   var proc = spawn('stripComments', args, {
     stdio: 'inherit'
   });
   proc.on('error', function(err) {
-    cb(err)
+    cb(err);
   });
   proc.on('exit', function (code) {
     if (code !== 0) {
-      cb(code)
+      cb(code);
       return;
     }
     cb();
   });
 }
 
-it('should leave alone code without any comments', function() {
-  var fixture = read('test/fixtures/no-comments.js')
-  var actual = strip(fixture)
-  var expected = read('test/fixtures/no-comments.js')
-  actual.should.eql(expected)
-})
-
+it.skip('should leave alone code without any comments', function() {
+  var fixture = read('test/fixtures/no-comments.js');
+  var actual = strip(fixture);
+  var expected = read('test/fixtures/no-comments.js');
+  actual.should.eql(expected);
+});
 
 describe('strip:', function () {
   it('should strip all comments.', function () {
-    var actual = strip("foo // this is a comment\n/* me too */")
+    var actual = strip("foo // this is a comment\n/* me too */");
     var expected = 'foo';
     normalize(actual).should.eql(normalize(expected));
   });
 
   it('should strip line comments.', function () {
-    var actual = strip.line("foo // this is a comment\n/* me too */")
+    var actual = strip.line("foo // this is a comment\n/* me too */");
     var expected = 'foo\n/* me too */';
     normalize(actual).should.eql(normalize(expected));
   });
 
   it('should strip block comments.', function () {
-    var actual = strip.block("foo // this is a comment\n/* me too */")
+    var actual = strip.block("foo // this is a comment\n/* me too */");
     var expected = 'foo // this is a comment\n';
     normalize(actual).should.eql(normalize(expected));
   });
 
   it('should strip all but not `/*/`', function() {
-    var actual = strip("/* I will be stripped */\nvar path = '/and/this/*/not/be/stripped';")
-    var expected = "\nvar path = '/and/this/*/not/be/stripped';"
+    var actual = strip("/* I will be stripped */\nvar path = '/and/this/*/not/be/stripped';");
+    var expected = "\nvar path = '/and/this/*/not/be/stripped';";
     normalize(actual).should.eql(normalize(expected));
-  })
+  });
 
   it('should strip all but not globstars `/**/*` #1', function() {
-    var actual = strip("var path = './path/to/scripts/**/*.js';")
-    var expected = "var path = './path/to/scripts/**/*.js';"
+    var actual = strip("var path = './path/to/scripts/**/*.js';");
+    var expected = "var path = './path/to/scripts/**/*.js';";
     normalize(actual).should.eql(normalize(expected));
-  })
+  });
 
   it('should strip all but not globstars `/**/` #2 and `//!` line comments (safe:true)', function() {
-    var actual = strip("var partPath = './path/*/to/scripts/**/'; //! line comment", {safe:true})
-    var expected = "var partPath = './path/*/to/scripts/**/'; //! line comment"
+    var actual = strip("var partPath = './path/*/to/scripts/**/'; //! line comment", {safe:true});
+    var expected = "var partPath = './path/*/to/scripts/**/'; //! line comment";
     normalize(actual).should.eql(normalize(expected));
-  })
+  });
 
   it('should strip all but not `/*/*something` from anywhere', function() {
-    var actual = strip("var partPath = './path/*/*something/test.txt';")
-    var expected = "var partPath = './path/*/*something/test.txt';"
+    var actual = strip("var partPath = './path/*/*something/test.txt';");
+    var expected = "var partPath = './path/*/*something/test.txt';";
     normalize(actual).should.eql(normalize(expected));
-  })
+  });
 
   it('should strip all but not `/*/*something/*.js` from anywhere (globstar-like)', function() {
-    var actual = strip("var partPath = './path/*/*something/*.js';")
-    var expected = "var partPath = './path/*/*something/*.js';"
+    var actual = strip("var partPath = './path/*/*something/*.js';");
+    var expected = "var partPath = './path/*/*something/*.js';";
     normalize(actual).should.eql(normalize(expected));
-  })
+  });
 
-  it('should leave alone code without any comments', function() {
+  it.skip('should leave alone code without any comments', function() {
     var fixture = read('test/fixtures/no-comment.js');
     var actual = strip(fixture);
     var expected = fixture;
     actual.should.eql(expected);
-  })
+  });
 });
 
 describe('strip all or empty:', function () {
@@ -210,7 +211,7 @@ describe('cli support', function() {
       '--output', 'test/actual/strip-comments-all.js',
       '--strip "all"'
     ];
-    
+
     cli(args, function(e) {
       if (!e) {
         var actual = read('test/actual/strip-comments-all.js');
@@ -219,19 +220,20 @@ describe('cli support', function() {
         done();
         return;
       }
-      done(e)
-    })
+      done(e);
+    });
   });
-  it('should strip only all block comments.', function () {
+
+  it('should strip only all block comments.', function (done) {
     this.timeout(10000);
-    
+
     var args = [
       './cli.js',
       '--input', 'test/fixtures/strip-comments.js',
       '--output', 'test/actual/strip-comments-block.js',
       '--strip "block"'
     ];
-    
+
     cli(args, function(e) {
       if (!e) {
         var actual = read('test/actual/strip-comments-block.js');
@@ -240,19 +242,19 @@ describe('cli support', function() {
         done();
         return;
       }
-      done(e)
-    })
+      done(e);
+    });
   });
-  it('should strip only all line comments', function () {
+  it('should strip only all line comments', function (done) {
     this.timeout(10000);
-    
+
     var args = [
       './cli.js',
       '--input', 'test/fixtures/strip-comments.js',
       '--output', 'test/actual/strip-comments-line.js',
       '--strip "line"'
     ];
-    
+
     cli(args, function(e) {
       if (!e) {
         var actual = read('test/actual/strip-comments-line.js');
@@ -261,7 +263,7 @@ describe('cli support', function() {
         done();
         return;
       }
-      done(e)
-    })
+      done(e);
+    });
   });
 });
