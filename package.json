@@ -1,7 +1,7 @@
 {
   "name": "strip-comments",
   "description": "Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": {
     "name": "Jon Schlinkert",
@@ -31,7 +31,9 @@
     "strip": "cli.js"
   },
   "dependencies": {
-    "commander": "*"
+    "commander": "*",
+    "esprima-extract-comments": "^0.1.2",
+    "extend-shallow": "^0.1.1"
   },
   "devDependencies": {
     "mocha": "*",
