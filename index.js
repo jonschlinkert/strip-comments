@@ -7,7 +7,6 @@
 
 'use strict';
 
-var fs = require('fs');
 var extract = require('esprima-extract-comments');
 var extend = require('extend-shallow');
 
@@ -37,29 +36,41 @@ function strip(str, options) {
   }
 
   try {
-    var opts = extend({safe: false}, options);
+    var opts = extend({ safe: false }, options);
     var comments = extract.fromString(str);
     var keys = Object.keys(comments);
     var len = keys.length;
     var i = 0;
+
     while (i < len) {
       var key = keys[i++];
       var comment = comments[key];
 
-      if (comment.type === 'Line') {
-        comment.value = '//' + comment.value;
+      if (comment.type === 'Line' && typeof opts.block === 'undefined') {
+        if (opts.safe === true && comment.value[0] === '!') {
+          continue;
+        } else {
+          comment.value = '//' + comment.value;
+        }
+        str = str.replace(comment.value, '');
       }
-      if (comment.type === 'Block') {
-        comment.value = '/*' + comment.value + '*/';
+
+      if (comment.type === 'Block' && typeof opts.line === 'undefined') {
+        if (opts.safe === true && comment.value[0] === '!') {
+          continue;
+        } else {
+          comment.value = '/*' + comment.value + '*/';
+        }
+        str = str.replace(comment.value, '');
       }
-      str = str.replace(comment.value, '');
+
     }
   } catch(err) {
     if (opts.silent) return;
     throw err;
   }
   return str;
-};
+}
 
 /**
  * Strip block comments from the given `str`.
@@ -76,35 +87,7 @@ function strip(str, options) {
  */
 
 strip.block = function stripBlock(str, options) {
-  var opts = extend({safe: false}, options);
-  var comments = extract.fromString(str);
-  var keys = Object.keys(comments);
-  var len = keys.length;
-  var i = 0;
-
-  try {
-    while (i < len) {
-      var key = keys[i++];
-      var comment = comments[key];
-
-      if (comment.type === 'Block') {
-        if (opts.safe === true && comment.value[0] === '!') {
-          continue;
-        } else {
-          comment.value = '/*' + comment.value + '*/';
-        }
-        str = str.replace(comment.value, '');
-      }
-
-      if (comment.type === 'Line') {
-        comment.value = '//' + comment.value;
-      }
-    }
-  } catch(err) {
-    if (opts.silent) return;
-    throw err;
-  }
-  return str;
+  return strip(str, extend({}, options, {block: true}));
 };
 
 /**
@@ -122,33 +105,5 @@ strip.block = function stripBlock(str, options) {
  */
 
 strip.line = function stripLine(str, options) {
-  var opts = extend({safe: false}, options);
-  var comments = extract.fromString(str);
-  var keys = Object.keys(comments);
-  var len = keys.length;
-  var i = 0;
-
-  try {
-    while (i < len) {
-      var key = keys[i++];
-      var comment = comments[key];
-
-      if (comment.type === 'Line') {
-        if (opts.safe === true && comment.value[0] === '!') {
-          continue;
-        } else {
-          comment.value = '//' + comment.value;
-        }
-        str = str.replace(comment.value, '');
-      }
-
-      if (comment.type === 'Block') {
-        comment.value = '/*' + comment.value + '*/';
-      }
-    }
-  } catch(err) {
-    if (opts.silent) return;
-    throw err;
-  }
-  return str;
+  return strip(str, extend({}, options, {line: true}));
 };

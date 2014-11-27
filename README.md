@@ -24,7 +24,7 @@ console.log(strip('Hey! // foo'));
 ```
 
 ## API
-### [strip](index.js#L34)
+### [strip](index.js#L33)
 
 Strip both block and line comments from the given `str`.
 
@@ -37,7 +37,7 @@ strip('abc // foo bar baz\n/* quux fez *\/');
 //=> 'abc '
 ```
 
-### [.block](index.js#L78)
+### [.block](index.js#L89)
 
 Strip block comments from the given `str`.
 
@@ -50,7 +50,7 @@ strip.block('abc // foo bar baz\n/* quux fez *\/');
 //=> 'abc '
 ```
 
-### [.line](index.js#L124)
+### [.line](index.js#L107)
 
 Strip line comments from the given `str`.
 
