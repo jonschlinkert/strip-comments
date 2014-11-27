@@ -5,13 +5,11 @@
  * Licensed under the MIT license.
  */
 
-'use stric';
+'use strict';
 
-var reBlock = /\/\*(?!\/)(.|[\r\n]|\n)+?\*\/\n?\n?/gm
-var reBlockIgnore = /\/\*(?!(\*?\/|\*?\!))(.|[\r\n]|\n)+?\*\/\n?\n?/gm
-var reLine = /(^|[^\S\n])(?:\/\/)([\s\S]+?)$/gm;
-var reLineIgnore = /(^|[^\S\n])(?:\/\/[^!])([\s\S]+?)$/gm;
-var protect = require('protect-strings');
+var fs = require('fs');
+var extract = require('esprima-extract-comments');
+var extend = require('extend-shallow');
 
 /**
  * Expose `strip`
@@ -20,63 +18,137 @@ var protect = require('protect-strings');
 module.exports = strip;
 
 /**
- * Strip all comments
+ * Strip both block and line comments from the given `str`.
  *
- * {%= docs("strip") %}
+ * ```js
+ * strip('abc // foo bar baz\n/* quux fez *\/');
+ * //=> 'abc '
+ * ```
  *
- * @docs strip
- * @param   {String} `str`  file contents or string to strip.
- * @param   {Object} `opts`  options are passed to `.block`, and `.line`
- * @return  {String} String without comments.
+ * @param {String} `str`
+ * @param {Object} `opts` When `safe: true` comments with `//!` or `/*!` are preserved
+ * @return {String} String without block comments.
  * @api public
  */
 
-function strip(str, opts) {
-  if (typeof str !== 'string') {
-    throw new Error('strip-comments expects a string');
+function strip(str, options) {
+  if (!str || str.length === 0) {
+    return '';
   }
-  return strip.block(strip.line(str, opts), opts);
-}
 
-// function _strip(content, opts) {
-//   return strip.block(strip.line(content, opts), opts);
-// }
+  try {
+    var opts = extend({safe: false}, options);
+    var comments = extract.fromString(str);
+    var keys = Object.keys(comments);
+    var len = keys.length;
+    var i = 0;
+    while (i < len) {
+      var key = keys[i++];
+      var comment = comments[key];
 
-/**
- * Strip only block comments, optionally leaving protected comments
- * (e.g. `/*!`) intact.
- *
- * @docs block
- * @param   {String} `str`  file content or string to strip to
- * @param   {Object} `opts`  if `safe:true`, strip only comments that do not start with `/*!` or `/**!`
- * @return  {String} String without block comments.
- * @api public
- */
-
-strip.block = function(str, opts) {
-  opts = opts || {};
-  var re = reBlock
-  if (opts.safe) {
-    re = reBlockIgnore
+      if (comment.type === 'Line') {
+        comment.value = '//' + comment.value;
+      }
+      if (comment.type === 'Block') {
+        comment.value = '/*' + comment.value + '*/';
+      }
+      str = str.replace(comment.value, '');
+    }
+  } catch(err) {
+    if (opts.silent) return;
+    throw err;
   }
-  return str ? str.replace(re, '') : '';
+  return str;
 };
 
 /**
- * Strip only line comments
+ * Strip block comments from the given `str`.
  *
- * @docs line
- * @param   {String} `str`  file content or string to strip to
- * @param   {Object} `opts`  if `safe:true`, strip all that not starts with `//!`
- * @return  {String} String without line comments.
+ * ```js
+ * strip.block('abc // foo bar baz\n/* quux fez *\/');
+ * //=> 'abc '
+ * ```
+ *
+ * @param {String} `str`
+ * @param {Object} `opts` When `safe: true` comments with `/*!` are preserved
+ * @return {String}
  * @api public
  */
 
-strip.line = function(str, opts) {
-  opts = opts || {};
-  var re = reLine;
-  if (opts.safe) {
-    re = reLineIgnore;
+strip.block = function stripBlock(str, options) {
+  var opts = extend({safe: false}, options);
+  var comments = extract.fromString(str);
+  var keys = Object.keys(comments);
+  var len = keys.length;
+  var i = 0;
+
+  try {
+    while (i < len) {
+      var key = keys[i++];
+      var comment = comments[key];
+
+      if (comment.type === 'Block') {
+        if (opts.safe === true && comment.value[0] === '!') {
+          continue;
+        } else {
+          comment.value = '/*' + comment.value + '*/';
+        }
+        str = str.replace(comment.value, '');
+      }
+
+      if (comment.type === 'Line') {
+        comment.value = '//' + comment.value;
+      }
+    }
+  } catch(err) {
+    if (opts.silent) return;
+    throw err;
   }
-  return str ? str.replace(re, '') : '';
+  return str;
+};
+
+/**
+ * Strip line comments from the given `str`.
+ *
+ * ```js
+ * strip.line('abc // foo bar baz\n/* quux fez *\/');
+ * //=> 'abc \n/* quux fez *\/'
+ * ```
+ *
+ * @param {String} `str`
+ * @param {Object} `opts` When `safe: true` comments with `//!` are preserved
+ * @return {String}
+ * @api public
+ */
+
+strip.line = function stripLine(str, options) {
+  var opts = extend({safe: false}, options);
+  var comments = extract.fromString(str);
+  var keys = Object.keys(comments);
+  var len = keys.length;
+  var i = 0;
+
+  try {
+    while (i < len) {
+      var key = keys[i++];
+      var comment = comments[key];
+
+      if (comment.type === 'Line') {
+        if (opts.safe === true && comment.value[0] === '!') {
+          continue;
+        } else {
+          comment.value = '//' + comment.value;
+        }
+        str = str.replace(comment.value, '');
+      }
+
+      if (comment.type === 'Block') {
+        comment.value = '/*' + comment.value + '*/';
+      }
+    }
+  } catch(err) {
+    if (opts.silent) return;
+    throw err;
+  }
+  return str;
 };
