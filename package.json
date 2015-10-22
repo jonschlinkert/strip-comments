@@ -1,34 +1,24 @@
 {
   "name": "strip-comments",
   "description": "Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
-  "author": {
-    "name": "Jon Schlinkert",
-    "url": "https://github.com/jonschlinkert"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/jonschlinkert/strip-comments.git"
-  },
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "jonschlinkert/strip-comments",
   "bugs": {
     "url": "https://github.com/jonschlinkert/strip-comments/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/jonschlinkert/strip-comments/blob/master/LICENSE-MIT"
-    }
-  ],
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require should"
+    "test": "mocha"
+  },
+  "engines": {
+    "node": ">=0.10.0"
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "^4.0.4",
-    "verb": "^0.2.15",
-    "verb-tag-jscomments": "^0.2.2"
+    "should": "*"
   },
   "keywords": [
     "block",
@@ -44,7 +34,15 @@
     "remove",
     "strip"
   ],
-  "engines": {
-    "node": ">=0.10.0"
+  "verb": {
+    "related": {
+      "list": [
+        "esprima-extract-comments",
+        "extract-comments",
+        "js-comments",
+        "parse-comments",
+        "parse-code-context"
+      ]
+    }
   }
 }
