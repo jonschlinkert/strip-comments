@@ -2,6 +2,8 @@
 
 var fs = require('fs');
 var strip = require('../index');
+require('should');
+require('mocha');
 
 function read(src) {
   var str = fs.readFileSync('./' + src,'utf-8');

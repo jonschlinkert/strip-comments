@@ -1,7 +1,31 @@
 {
   "name": "strip-comments",
-  "version": "0.3.1",
+  "description": "Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.",
+  "repository": "jonschlinkert/strip-comments",
+  "license": "MIT",
+  "homepage": "https://github.com/jonschlinkert/strip-comments",
+  "authors": [
+    "Jon Schlinkert (https://github.com/jonschlinkert)"
+  ],
   "main": [
     "index.js"
+  ],
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*"
+  },
+  "keywords": [
+    "block",
+    "comment",
+    "comments",
+    "expressions",
+    "line",
+    "protected",
+    "re",
+    "regex",
+    "regexp",
+    "regular",
+    "remove",
+    "strip"
   ]
 }
