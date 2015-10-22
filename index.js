@@ -1,22 +1,19 @@
 /*!
  * strip-comments <https://github.com/jonschlinkert/strip-comments>
  *
- * Copyright (c) 2014 Jon Schlinkert, contributors.
+ * Copyright (c) 2014-2015 Jon Schlinkert.
  * Licensed under the MIT license.
  */
 
 'use strict';
 
-var reBlock = /\/\*(?!\/)(.|[\r\n]|\n)+?\*\/\n?\n?/gm
-var reBlockIgnore = /\/\*(?!(\*?\/|\*?\!))(.|[\r\n]|\n)+?\*\/\n?\n?/gm
+var reBlock = /\/\*(?!\/)(.|[\r\n]|\n)+?\*\/\n?\n?/gm;
+var reBlockIgnore = /\/\*(?!(\*?\/|\*?\!))(.|[\r\n]|\n)+?\*\/\n?\n?/gm;
 var reLine = /(^|[^\S\n])(?:\/\/)([\s\S]+?)$/gm;
 var reLineIgnore = /(^|[^\S\n])(?:\/\/[^!])([\s\S]+?)$/gm;
 
-
 /**
  * Strip all comments
- *
- * {%= docs("strip") %}
  *
  * @param   {String} `str`  file contents or string to strip.
  * @param   {Object} `opts`  options are passed to `.block`, and `.line`
@@ -24,16 +21,13 @@ var reLineIgnore = /(^|[^\S\n])(?:\/\/[^!])([\s\S]+?)$/gm;
  * @api public
  */
 
-var strip = module.exports = function(str, opts) {
+function strip(str, opts) {
   return str ? strip.block(strip.line(str, opts), opts) : '';
-};
-
+}
 
 /**
  * Strip only block comments, optionally leaving protected comments
  * (e.g. `/*!`) intact.
- *
- * {%= docs("block") %}
  *
  * @param   {String} `str`  file content or string to strip to
  * @param   {Object} `opts`  if `safe:true`, strip only comments that do not start with `/*!` or `/**!`
@@ -43,9 +37,9 @@ var strip = module.exports = function(str, opts) {
 
 strip.block = function(str, opts) {
   opts = opts || {};
-  var re = reBlock //new RegExp(reBlock + reBlockEnd, 'gm');
+  var re = reBlock; //new RegExp(reBlock + reBlockEnd, 'gm');
   if(opts.safe) {
-    re = reBlockIgnore //new RegExp(reBlockIgnore + reBlockEnd, 'gm');
+    re = reBlockIgnore; //new RegExp(reBlockIgnore + reBlockEnd, 'gm');
   }
   return str ? str.replace(re, '') : '';
 };
@@ -53,8 +47,6 @@ strip.block = function(str, opts) {
 
 /**
  * Strip only line comments
- *
- * {%= docs("line") %}
  *
  * @param   {String} `str`  file content or string to strip to
  * @param   {Object} `opts`  if `safe:true`, strip all that not starts with `//!`
@@ -70,3 +62,9 @@ strip.line = function(str, opts) {
   }
   return str ? str.replace(re, '') : '';
 };
+
+/**
+ * Expose `strip`
+ */
+
+module.exports = strip;
