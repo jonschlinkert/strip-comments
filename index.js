@@ -5,7 +5,7 @@
  * Licensed under the MIT license.
  */
 
-'use stric';
+'use strict';
 
 var reBlock = /\/\*(?!\/)(.|[\r\n]|\n)+?\*\/\n?\n?/gm
 var reBlockIgnore = /\/\*(?!(\*?\/|\*?\!))(.|[\r\n]|\n)+?\*\/\n?\n?/gm
