@@ -32,6 +32,20 @@ describe('strip:', function() {
     assert.equal(actual, expected);
   });
 
+  it('should not strip non-comments in string literals', function() {
+    // see https://github.com/jonschlinkert/strip-comments/issues/21#issuecomment-142426289
+    var str = read('test/fixtures/config.js');
+    var actual = strip(str);
+    assert.equal(actual, str);
+  });
+
+  it('should not strip non-comments in quoted strings', function() {
+    // see https://github.com/jonschlinkert/strip-comments/issues/21#issue-104476040
+    var str = read('test/fixtures/quoted-strings.js');
+    var actual = strip(str);
+    assert.equal(actual, str);
+  });
+
   it('should strip all but not `/*/`', function() {
     var actual = strip("/* I will be stripped */\nvar path = '/this/should/*/not/be/stripped';");
     var expected = "\nvar path = '/this/should/*/not/be/stripped';";
