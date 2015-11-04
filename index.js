@@ -86,7 +86,6 @@ function stripEach(str, comments, options) {
  * @param {String} `string`
  * @param {Object} `options` Pass `safe: true` to keep comments with `!`
  * @return {String}
- * @api public
  */
 
 function discard(str, comment, opts) {

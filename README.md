@@ -81,16 +81,6 @@ Strip the first comment from the given `string`.
 * `options` **{Object}**: Pass `safe: true` to keep comments with `!`
 * `returns` **{String}**
 
-### [discard](index.js#L92)
-
-Remove a comment from the given string.
-
-**Params**
-
-* `string` **{String}**
-* `options` **{Object}**: Pass `safe: true` to keep comments with `!`
-* `returns` **{String}**
-
 ## Related projects
 
 * [code-context](https://www.npmjs.com/package/code-context): Parse a string of javascript to determine the context for functions, variables and comments based… [more](https://www.npmjs.com/package/code-context) | [homepage](https://github.com/jonschlinkert/code-context)
