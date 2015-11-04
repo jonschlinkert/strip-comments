@@ -10,7 +10,10 @@
  */
 var foo = function() {};
 
+
 var bar = function() {};
+
+var foo = '//bar baz not a comment';
 
 // this single-line line comment
 var baz = function() {
@@ -26,7 +29,5 @@ var baz = function() {
 // also this multiline
 // line comment
 var fun = false;
-
 var path = '/path/to/*/something/that/not/be/stripped.js';
-
-var globstar = '/path/to/globstar/not/be/stripped/**/*.js';
+var globstar = '/path//to//globstar/not/be/stripped/**/*.js';

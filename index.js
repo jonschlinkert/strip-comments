@@ -1,70 +1,112 @@
-/*!
- * strip-comments <https://github.com/jonschlinkert/strip-comments>
- *
- * Copyright (c) 2014-2015 Jon Schlinkert.
- * Licensed under the MIT license.
- */
-
 'use strict';
 
-var reBlock = /\/\*(?!\/)(.|[\r\n]|\n)+?\*\/\n?\n?/gm;
-var reBlockIgnore = /\/\*(?!(\*?\/|\*?\!))(.|[\r\n]|\n)+?\*\/\n?\n?/gm;
-var reLine = /(^|[^\S\n])(?:\/\/)([\s\S]+?)$/gm;
-var reLineIgnore = /(^|[^\S\n])(?:\/\/[^!])([\s\S]+?)$/gm;
+var extract = require('extract-comments');
 
 /**
- * Strip all comments
+ * Strip comments from the given `string`.
  *
- * @param   {String} `str`  file contents or string to strip.
- * @param   {Object} `opts`  options are passed to `.block`, and `.line`
- * @return  {String} String without comments.
+ * @param {String} `string`
+ * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @return {String}
  * @api public
  */
 
-function strip(str, opts) {
-  return str ? strip.block(strip.line(str, opts), opts) : '';
+function strip(str, options) {
+  options = options || {};
+  if (options.line) {
+    return line(str, options);
+  }
+  if (options.block) {
+    return block(str, options);
+  }
+  if (options.first) {
+    return first(str, options);
+  }
+  str = block(str, options);
+  return line(str, options);
 }
 
 /**
- * Strip only block comments, optionally leaving protected comments
- * (e.g. `/*!`) intact.
+ * Strip block comments from the given `string`.
  *
- * @param   {String} `str`  file content or string to strip to
- * @param   {Object} `opts`  if `safe:true`, strip only comments that do not start with `/*!` or `/**!`
- * @return  {String} String without block comments.
+ * @param {String} `string`
+ * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @return {String}
  * @api public
  */
 
-strip.block = function(str, opts) {
-  opts = opts || {};
-  var re = reBlock; //new RegExp(reBlock + reBlockEnd, 'gm');
-  if(opts.safe) {
-    re = reBlockIgnore; //new RegExp(reBlockIgnore + reBlockEnd, 'gm');
-  }
-  return str ? str.replace(re, '') : '';
-};
-
+function block(str, options) {
+  return stripEach(str, extract.block(str, options), options);
+}
 
 /**
- * Strip only line comments
+ * Strip line comments from the given `string`.
  *
- * @param   {String} `str`  file content or string to strip to
- * @param   {Object} `opts`  if `safe:true`, strip all that not starts with `//!`
- * @return  {String} String without line comments.
+ * @param {String} `string`
+ * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @return {String}
  * @api public
  */
 
-strip.line = function(str, opts) {
-  opts = opts || {};
-  var re = reLine;
-  if(opts.safe) {
-    re = reLineIgnore;
+function line(str, options) {
+  return stripEach(str, extract.line(str, options), options);
+}
+
+/**
+ * Strip the first comment from the given `string`.
+ *
+ * @param {String} `string`
+ * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @return {String}
+ * @api public
+ */
+
+function first(str, options) {
+  return stripEach(str, extract.first(str), options);
+}
+
+/**
+ * Private function for stripping comments.
+ *
+ * @param {String} `string`
+ * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @return {String}
+ */
+
+function stripEach(str, comments, options) {
+  comments.forEach(function(comment) {
+    str = discard(str, comment, options);
+  });
+  return str;
+}
+
+/**
+ * Remove a comment from the given string.
+ *
+ * @param {String} `string`
+ * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @return {String}
+ * @api public
+ */
+
+function discard(str, comment, opts) {
+  var ch = comment.value.charAt(0);
+  if (opts && opts.safe === true && ch === '!') {
+    return str;
   }
-  return str ? str.replace(re, '') : '';
-};
+  return str.split(comment.raw).join('');
+}
 
 /**
  * Expose `strip`
  */
 
 module.exports = strip;
+
+/**
+ * Expose methods
+ */
+
+module.exports.block = block;
+module.exports.first = first;
+module.exports.line = line;

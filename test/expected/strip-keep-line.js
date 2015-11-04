@@ -22,7 +22,7 @@ var baz = function() {
   
   var some = true;
   
-  var fafa = true; 
+  var fafa = true;
   
   var but = 'not'; //! that comment
 };

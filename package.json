@@ -1,20 +1,23 @@
 {
   "name": "strip-comments",
   "description": "Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/strip-comments",
-  "bugs": {
-    "url": "https://github.com/jonschlinkert/strip-comments/issues"
-  },
+  "bugs": "https://github.com/jonschlinkert/strip-comments/issues",
   "license": "MIT",
-  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
   "scripts": {
     "test": "mocha"
   },
-  "engines": {
-    "node": ">=0.10.0"
+  "dependencies": {
+    "extract-comments": "^0.8.5"
   },
   "devDependencies": {
     "mocha": "*",
@@ -37,10 +40,12 @@
   "verb": {
     "related": {
       "list": [
+        "snapdragon",
         "esprima-extract-comments",
         "extract-comments",
         "js-comments",
         "parse-comments",
+        "code-context",
         "parse-code-context"
       ]
     }
