@@ -12,7 +12,18 @@ var extract = require('extract-comments');
  */
 
 function strip(str, options) {
-  return block(line(str, options), options);
+  options = options || {};
+  if (options.line) {
+    return line(str, options);
+  }
+  if (options.block) {
+    return block(str, options);
+  }
+  if (options.first) {
+    return first(str, options);
+  }
+  str = block(str, options);
+  return line(str, options);
 }
 
 /**
@@ -25,7 +36,7 @@ function strip(str, options) {
  */
 
 function block(str, options) {
-  return stripEach(str, extract.block(str), options);
+  return stripEach(str, extract.block(str, options), options);
 }
 
 /**
@@ -38,7 +49,7 @@ function block(str, options) {
  */
 
 function line(str, options) {
-  return stripEach(str, extract.line(str), options);
+  return stripEach(str, extract.line(str, options), options);
 }
 
 /**
