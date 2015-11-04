@@ -46,6 +46,13 @@ describe('strip:', function() {
     assert.equal(actual, str);
   });
 
+  it('should not hang on unclosed comments', function() {
+    // see https://github.com/jonschlinkert/strip-comments/issues/18#issue-58114276
+    var str = 'if (accept == \'video/*\') {';
+    var actual = strip(str);
+    assert.equal(actual, str);
+  });
+
   it('should strip all but not `/*/`', function() {
     var actual = strip("/* I will be stripped */\nvar path = '/this/should/*/not/be/stripped';");
     var expected = "\nvar path = '/this/should/*/not/be/stripped';";
