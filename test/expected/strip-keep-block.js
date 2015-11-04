@@ -10,7 +10,10 @@
  */
 var foo = function() {};
 
+
 var bar = function() {};
+
+var foo = '//bar baz not a comment';
 
 // this single-line line comment
 var baz = function() {

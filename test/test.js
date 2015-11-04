@@ -10,8 +10,8 @@ function read(src) {
   return fs.readFileSync(src,'utf-8');
 }
 
-describe('strip:', function () {
-  it('should strip all comments.', function () {
+describe('strip:', function() {
+  it('should strip all comments.', function() {
     var actual = strip("'foo'; // this is a comment\n/* me too */ var abc = 'xyz';");
     var expected = [
       '\'foo\'; ',
@@ -20,13 +20,13 @@ describe('strip:', function () {
     assert.equal(actual, expected);
   });
 
-  it('should strip line comments.', function () {
+  it('should strip line comments.', function() {
     var actual = strip.line('foo // this is a comment\n/* me too */');
     var expected = 'foo \n/* me too */';
     assert.equal(actual, expected);
   });
 
-  it('should strip block comments.', function () {
+  it('should strip block comments.', function() {
     var actual = strip.block('foo // this is a comment\n/* me too */');
     var expected = 'foo // this is a comment\n';
     assert.equal(actual, expected);
@@ -44,7 +44,7 @@ describe('strip:', function () {
     assert.equal(actual, expected);
   });
 
-  it('should strip all but not globstars `/**/` #2 and `//!` line comments (safe: true)', function () {
+  it('should strip all but not globstars `/**/` #2 and `//!` line comments (safe: true)', function() {
     var actual = strip('var partPath = \'./path/*/to/scripts/**/\'; //! line comment', {safe: true});
     var expected = 'var partPath = \'./path/*/to/scripts/**/\'; //! line comment';
     assert.equal(actual, expected);
@@ -70,8 +70,8 @@ describe('strip:', function () {
   });
 });
 
-describe('error handling:', function () {
-  it('should throw an error on empty strings', function (cb) {
+describe('error handling:', function() {
+  it('should throw an error on empty strings', function(cb) {
     try {
       strip.block();
       cb(new Error('expected an error'));
@@ -83,7 +83,7 @@ describe('error handling:', function () {
     }
   });
 
-  it('should throw an error when empty strings are passed to "block"', function (cb) {
+  it('should throw an error when empty strings are passed to "block"', function(cb) {
     try {
       strip.block();
       cb(new Error('expected an error'));
@@ -95,7 +95,7 @@ describe('error handling:', function () {
     }
   });
 
-  it('should throw an error when empty strings are passed to "line"', function (cb) {
+  it('should throw an error when empty strings are passed to "line"', function(cb) {
     try {
       strip.block();
       cb(new Error('expected an error'));
@@ -108,106 +108,107 @@ describe('error handling:', function () {
   });
 });
 
-describe('strip all or empty:', function () {
-  it.only('should strip all multiline, singleline, block and line comments.', function () {
+describe('strip all or empty:', function() {
+  it('should strip all multiline, singleline, block and line comments.', function() {
     var fixture = read('test/fixtures/strip-all.js');
+    var expected = read('test/expected/strip-all.js');
     var actual = strip(fixture);
-    console.log(actual)
-    assert.equal(actual, read('test/expected/strip-all.js'));
+    actual.should.equal(expected);
   });
 
-  it('should not strip !important block comments', function () {
+  it('should not strip !important block comments', function() {
     var fixture = read('test/fixtures/strip-all.js');
     var actual = strip.block(fixture, { safe: true });
     var expected = read('test/expected/strip-keep-block.js');
     assert.equal(actual, expected);
   });
 
-  it('should strip only all line comments that not starts with `//!` (safe:true).', function () {
+  it('should strip only all line comments that not starts with `//!` (safe:true).', function() {
     var fixture = read('test/fixtures/strip-keep-line.js');
-    var actual = strip.line(fixture, { strict: true });
+    var actual = strip.line(fixture, { safe: true });
     var expected = read('test/expected/strip-keep-line.js');
     assert.equal(actual, expected);
   });
+});
 
-// describe('block comments:', function () {
-//   it('should strip block comments from a function.', function () {
-//     var actual = strip.block('var bar = function(/* this is a comment*/) {return;};');
-//     var expected = 'var bar = function() {return;};';
-//     assert.equal(actual, expected);
-//   });
+describe('block comments:', function() {
+  it('should strip block comments from a function.', function() {
+    var actual = strip.block('var bar = function(/* this is a comment*/) {return;};');
+    var expected = 'var bar = function() {return;};';
+    assert.equal(actual, expected);
+  });
 
-//   it('should strip block comments before and from a function.', function () {
-//     var actual = strip.block('/* this is a comment */\nvar bar = function(/*this is a comment*/) {return;};');
-//     var expected = 'var bar = function() {return;};';
-//     assert.equal(actual, expected);
-//   });
+  it('should strip block comments before and from a function.', function() {
+    var actual = strip.block('/* this is a comment */\nvar bar = function(/*this is a comment*/) {return;};');
+    var expected = '\nvar bar = function() {return;};';
+    assert.equal(actual, expected);
+  });
 
-//   it('should strip block comments before, after and from a function.', function () {
-//     var actual = strip.block('/* this is a comment */var bar = function(/*this is a comment*/) {return;};\n/* this is a comment*/');
-//     var expected = 'var bar = function() {return;};\n';
-//     assert.equal(actual, expected);
-//   });
-// });
+  it('should strip block comments before, after and from a function.', function() {
+    var actual = strip.block('/* this is a comment */var bar = function(/*this is a comment*/) {return;};\n/* this is a comment*/');
+    var expected = 'var bar = function() {return;};\n';
+    assert.equal(actual, expected);
+  });
+});
 
-// describe('line comments:', function () {
-//   it('should strip line comments.', function () {
-//     var actual = strip.line('// this is a line comment\nvar bar = function(/*this is a comment*/) {return;};');
-//     var expected = '\nvar bar = function(/*this is a comment*/) {return;};';
-//     assert.equal(actual, expected);
-//   });
+describe('line comments:', function() {
+  it('should strip line comments.', function() {
+    var actual = strip.line('// this is a line comment\nvar bar = function(/*this is a comment*/) {return;};');
+    var expected = '\nvar bar = function(/*this is a comment*/) {return;};';
+    assert.equal(actual, expected);
+  });
 
-//   it('should strip line comments with leading whitespace.', function () {
-//     var actual = strip.line(' //                           this should be stripped');
-//     var expected = '';
-//     assert.equal(actual, expected);
-//   });
+  it('should strip line comments with leading whitespace.', function() {
+    var actual = strip.line(' //                           this should be stripped');
+    var expected = ' ';
+    assert.equal(actual, expected);
+  });
 
-//   it('should not strip line comments in variables.', function () {
-//     var actual = strip.line('var foo = "//this is not a comment";');
-//     var expected = 'var foo = "//this is not a comment";';
-//     assert.equal(actual, expected);
-//   });
+  it('should not strip line comments in quoted strings.', function() {
+    var actual = strip.line('var foo = "//this is not a comment";');
+    var expected = 'var foo = "//this is not a comment";';
+    assert.equal(actual, expected);
+  });
 
-//   it('should not strip line comments in variables, but should after.', function () {
-//     var actual = strip.line('var foo = "//this is not a comment"; //this should be stripped');
-//     var expected = 'var foo = "//this is not a comment";';
-//     assert.equal(actual, expected);
-//   });
+  it('should strip line comments after quoted strings', function() {
+    var actual = strip.line('var foo = "//this is not a comment"; //this should be stripped');
+    var expected = 'var foo = "//this is not a comment"; ';
+    assert.equal(actual, expected);
+  });
 
-//   it('should not be whitespace sensitive.', function () {
-//     var actual = strip.line('var foo = "//this is not a comment"; //                           this should be stripped');
-//     var expected = 'var foo = "//this is not a comment";';
-//     assert.equal(actual, expected);
-//   });
+  it('should not be whitespace sensitive.', function() {
+    var actual = strip.line('var foo = "//this is not a comment"; //                           this should be stripped');
+    var expected = 'var foo = "//this is not a comment"; ';
+    assert.equal(actual, expected);
+  });
 
-//   it('should not strip URLs in a variable.', function () {
-//     var actual = strip.line('var foo = "http://github.com"; //                           this should be stripped');
-//     var expected = 'var foo = "http://github.com";';
-//     assert.equal(actual, expected);
-//   });
+  it('should not strip URLs in a quoted string.', function() {
+    var actual = strip.line('var foo = "http://github.com"; //                           this should be stripped');
+    var expected = 'var foo = "http://github.com"; ';
+    assert.equal(actual, expected);
+  });
 
-//   it('should strip URLs in a line comment.', function () {
-//     var actual = strip.line('// http://github.com"');
-//     var expected = '';
-//     assert.equal(actual, expected);
-//   });
+  it('should strip URLs in a line comment.', function() {
+    var actual = strip.line('// http://github.com"');
+    var expected = '';
+    assert.equal(actual, expected);
+  });
 
-//   it('should strip URLs in a block comment.', function () {
-//     var actual = strip.block('/**\n* http://github.com\n *\n */');
-//     var expected = '';
-//     assert.equal(actual, expected);
-//   });
+  it('should strip URLs in a block comment.', function() {
+    var actual = strip.block('/**\n* http://github.com\n *\n */');
+    var expected = '';
+    assert.equal(actual, expected);
+  });
 
-//   it('should strip line comments before a function, and not block comments.', function () {
-//     var actual = strip.line('/* this is a comment */\n//this is a comment\nvar bar = function(/*this is a comment*/) {return;};');
-//     var expected = '/* this is a comment */\n\nvar bar = function(/*this is a comment*/) {return;};';
-//     assert.equal(actual, expected);
-//   });
+  it('should strip line comments before a function, and not block comments.', function() {
+    var actual = strip.line('/* this is a comment */\n//this is a comment\nvar bar = function(/*this is a comment*/) {return;};');
+    var expected = '/* this is a comment */\n\nvar bar = function(/*this is a comment*/) {return;};';
+    assert.equal(actual, expected);
+  });
 
-//   it('should strip line comments before and after a function, and not block comments.', function () {
-//     var actual = strip.line('/* this is a comment */\n//this is a comment\nvar bar = function(/*this is a comment*/) {return;};\n//this is a line comment');
-//     var expected = '/* this is a comment */\n\nvar bar = function(/*this is a comment*/) {return;};\n';
-//     assert.equal(actual, expected);
-//   });
+  it('should strip line comments before and after a function, and not block comments.', function() {
+    var actual = strip.line('/* this is a comment */\n//this is a comment\nvar bar = function(/*this is a comment*/) {return;};\n//this is a line comment');
+    var expected = '/* this is a comment */\n\nvar bar = function(/*this is a comment*/) {return;};\n';
+    assert.equal(actual, expected);
+  });
 });
