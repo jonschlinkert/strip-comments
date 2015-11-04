@@ -5,9 +5,7 @@
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/strip-comments",
-  "bugs": {
-    "url": "https://github.com/jonschlinkert/strip-comments/issues"
-  },
+  "bugs": "https://github.com/jonschlinkert/strip-comments/issues",
   "license": "MIT",
   "files": [
     "index.js"
@@ -19,8 +17,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "extract-comments": "^0.8.4",
-    "strip-bom-string": "^0.1.2"
+    "extract-comments": "^0.8.5"
   },
   "devDependencies": {
     "mocha": "*",
@@ -43,10 +40,12 @@
   "verb": {
     "related": {
       "list": [
+        "snapdragon",
         "esprima-extract-comments",
         "extract-comments",
         "js-comments",
         "parse-comments",
+        "code-context",
         "parse-code-context"
       ]
     }
