@@ -1,6 +1,6 @@
 # strip-comments [![NPM version](https://badge.fury.io/js/strip-comments.svg)](http://badge.fury.io/js/strip-comments)  [![Build Status](https://travis-ci.org/jonschlinkert/strip-comments.svg)](https://travis-ci.org/jonschlinkert/strip-comments)
 
-> Strip comments from code. Removes both line comments and/or block comments, with options to leave protected comments unharmed.
+> Strip comments from code. Removes line comments, block comments, the first comment only, or all comments. Optionally leave protected comments unharmed.
 
 ## Install
 
@@ -20,15 +20,15 @@ console.log(strip('Hey! // foo'));
 
 ## API
 
-### [strip](index.js#L24)
+### [strip](index.js#L14)
 
-Strip all comments
+Strip comments from the given `string`.
 
 **Params**
 
-* `str` **{String}**: file contents or string to strip.
-* `opts` **{Object}**: options are passed to `.block`, and `.line`
-* `returns` **{String}**: String without comments.
+* `string` **{String}**
+* `options` **{Object}**: Pass `safe: true` to keep comments with `!`
+* `returns` **{String}**
 
 **Example**
 
@@ -37,48 +37,69 @@ console.log(strip("foo // this is a comment\n/* me too */"));
 //=> 'foo'
 ```
 
-### [.block](index.js#L38)
+### [block](index.js#L38)
 
-Strip only block comments, optionally leaving protected comments
-(e.g. `/*!`) intact.
+Strip block comments from the given `string`.
 
 **Params**
 
-* `str` **{String}**: file content or string to strip to
-* `opts` **{Object}**: if `safe:true`, strip only comments that do not start with `/*!` or `/**!`
-* `returns` **{String}**: String without block comments.
+* `string` **{String}**
+* `options` **{Object}**: Pass `safe: true` to keep comments with `!`
+* `returns` **{String}**
 
 **Example**
 
 ```js
-console.log(strip("foo // this is a comment\n/* me too */"));
+console.log(strip.block("foo // this is a comment\n/* me too */"));
 //=> 'foo // this is a comment\n'
 ```
 
-### [.line](index.js#L57)
+### [line](index.js#L51)
 
-Strip only line comments
+Strip line comments from the given `string`.
 
 **Params**
 
-* `str` **{String}**: file content or string to strip to
-* `opts` **{Object}**: if `safe:true`, strip all that not starts with `//!`
-* `returns` **{String}**: String without line comments.
+* `string` **{String}**
+* `options` **{Object}**: Pass `safe: true` to keep comments with `!`
+* `returns` **{String}**
 
 **Example**
 
 ```js
-console.log(strip("foo /* me too */"));
+console.log(strip.line("foo /* me too */"));
 //=> 'foo'
 ```
 
+### [first](index.js#L64)
+
+Strip the first comment from the given `string`.
+
+**Params**
+
+* `string` **{String}**
+* `options` **{Object}**: Pass `safe: true` to keep comments with `!`
+* `returns` **{String}**
+
+### [discard](index.js#L92)
+
+Remove a comment from the given string.
+
+**Params**
+
+* `string` **{String}**
+* `options` **{Object}**: Pass `safe: true` to keep comments with `!`
+* `returns` **{String}**
+
 ## Related projects
 
+* [code-context](https://www.npmjs.com/package/code-context): Parse a string of javascript to determine the context for functions, variables and comments based… [more](https://www.npmjs.com/package/code-context) | [homepage](https://github.com/jonschlinkert/code-context)
 * [esprima-extract-comments](https://www.npmjs.com/package/esprima-extract-comments): Extract code comments from string or from a glob of files using esprima. | [homepage](https://github.com/jonschlinkert/esprima-extract-comments)
 * [extract-comments](https://www.npmjs.com/package/extract-comments): Extract code comments from string or from a glob of files. | [homepage](https://github.com/jonschlinkert/extract-comments)
 * [js-comments](https://www.npmjs.com/package/js-comments): Parse JavaScript code comments and generate API documentation. | [homepage](https://github.com/jonschlinkert/js-comments)
 * [parse-code-context](https://www.npmjs.com/package/parse-code-context): Parse code context in a single line of javascript, for functions, variable declarations, methods, prototype… [more](https://www.npmjs.com/package/parse-code-context) | [homepage](https://github.com/jonschlinkert/parse-code-context)
 * [parse-comments](https://www.npmjs.com/package/parse-comments): Parse code comments from JavaScript or any language that uses the same format. | [homepage](https://github.com/jonschlinkert/parse-comments)
+* [snapdragon](https://www.npmjs.com/package/snapdragon): snapdragon is an extremely pluggable, powerful and easy-to-use parser-renderer factory. | [homepage](https://github.com/jonschlinkert/snapdragon)
 
 ## Running tests
 
@@ -90,7 +111,7 @@ $ npm i -d && npm test
 
 ## Contributing
 
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](https://github.com/jonschlinkert/strip-comments/issues/new).
+Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](/new).
 
 ## Author
 
@@ -106,4 +127,4 @@ Released under the MIT license.
 
 ***
 
-_This file was generated by [verb-cli](https://github.com/assemble/verb-cli) on October 22, 2015._
+_This file was generated by [verb-cli](https://github.com/assemble/verb-cli) on November 04, 2015._
