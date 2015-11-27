@@ -94,7 +94,7 @@ function discard(str, comment, opts) {
   if (opts && opts.safe === true && ch === '!') {
     return str;
   }
-  if (opts && opts.keepNewlines) {
+  if (opts && opts.preserveNewlines) {
     join = comment.raw.split(/[^\r\n]/).join('');
   }
   return str.split(comment.raw).join(join);

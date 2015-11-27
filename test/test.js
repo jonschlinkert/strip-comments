@@ -156,7 +156,7 @@ describe('strip all keep newlines:', function(){
   it('should strip all comments, but keep newlines.', function() {
     var fixture = read('test/fixtures/strip-all.js');
     var expected = read('test/expected/strip-keep-newlines.js');
-    var actual = strip(fixture, { keepNewlines: true });
+    var actual = strip(fixture, { preserveNewlines: true });
     actual.should.equal(expected);
   });
 });
