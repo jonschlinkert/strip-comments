@@ -90,10 +90,14 @@ function stripEach(str, comments, options) {
 
 function discard(str, comment, opts) {
   var ch = comment.value.charAt(0);
+  var join = '';
   if (opts && opts.safe === true && ch === '!') {
     return str;
   }
-  return str.split(comment.raw).join('');
+  if (opts && opts.keepNewlines) {
+    join = comment.raw.split(/[^\r\n]/).join('');
+  }
+  return str.split(comment.raw).join(join);
 }
 
 /**
