@@ -89,6 +89,23 @@ describe('strip:', function() {
     var expected = fixture;
     assert.equal(actual, expected);
   });
+
+  it('should not break on comments that are substrings of a later comment', function() {
+    // see https://github.com/jonschlinkert/strip-comments/issues/27
+    var actual = strip([
+      '// this is a substring',
+      '// this is a substring of a larger comment',
+      'someCode();',
+      'someMoreCode();'
+    ].join('\n'));
+    var expected = [
+      '',
+      '',
+      'someCode();',
+      'someMoreCode();'
+    ].join('\n');
+    assert.equal(actual, expected);
+  });
 });
 
 describe('error handling:', function() {

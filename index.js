@@ -93,7 +93,7 @@ function discard(str, comment, opts) {
   if (opts && opts.safe === true && ch === '!') {
     return str;
   }
-  return str.split(comment.raw).join('');
+  return str.replace(comment.raw, '');
 }
 
 /**
