@@ -5,7 +5,9 @@
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/strip-comments",
-  "bugs": "https://github.com/jonschlinkert/strip-comments/issues",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/strip-comments/issues"
+  },
   "license": "MIT",
   "files": [
     "index.js"
