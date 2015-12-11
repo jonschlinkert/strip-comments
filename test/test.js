@@ -7,7 +7,7 @@ var assert = require('assert');
 var strip = require('..');
 
 function read(src) {
-  return fs.readFileSync(src,'utf-8');
+  return fs.readFileSync(src, 'utf-8');
 }
 
 describe('strip:', function() {
@@ -51,6 +51,14 @@ describe('strip:', function() {
     var str = 'if (accept == \'video/*\') {';
     var actual = strip(str);
     assert.equal(actual, str);
+  });
+
+  it('should not mangle json', function() {
+    var str = read(path.join(process.cwd(), 'package.json'));
+    var before = JSON.parse(str);
+    var res = strip(str);
+    var after = JSON.parse(res);
+    assert.deepEqual(before, after);
   });
 
   it('should strip all but not `/*/`', function() {
