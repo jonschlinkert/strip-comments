@@ -27,6 +27,13 @@ describe('strip:', function() {
     assert.equal(actual, expected);
   });
 
+  it('should not mistake escaped slashes for comments', function() {
+    // see https://github.com/jonschlinkert/extract-comments/issues/12
+    var str = "'foo/bar'.replace(/o\\//, 'g')";
+    var actual = strip.line(str);
+    assert.deepEqual(actual, str);
+  });
+
   it('should strip block comments.', function() {
     var actual = strip.block('foo // this is a comment\n/* me too */');
     var expected = 'foo // this is a comment\n';
@@ -34,21 +41,21 @@ describe('strip:', function() {
   });
 
   it('should not strip non-comments in string literals', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/21#issuecomment-142426289
+    // see https://github.com/jonschlinkert/strip-comments/issues/21
     var str = read('test/fixtures/config.js');
     var actual = strip(str);
     assert.equal(actual, str);
   });
 
   it('should not strip non-comments in quoted strings', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/21#issue-104476040
+    // see https://github.com/jonschlinkert/strip-comments/issues/21
     var str = read('test/fixtures/quoted-strings.js');
     var actual = strip(str);
     assert.equal(actual, str);
   });
 
   it('should not hang on unclosed comments', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/18#issue-58114276
+    // see https://github.com/jonschlinkert/strip-comments/issues/18
     var str = 'if (accept == \'video/*\') {';
     var actual = strip(str);
     assert.equal(actual, str);
@@ -175,6 +182,15 @@ describe('strip all or empty:', function() {
     var actual = strip.line(fixture, { safe: true });
     var expected = read('test/expected/strip-keep-line.js');
     assert.equal(actual, expected);
+  });
+});
+
+describe('strip all keep newlines:', function(){
+  it('should strip all comments, but keep newlines.', function() {
+    var fixture = read('test/fixtures/strip-all.js');
+    var expected = read('test/expected/strip-keep-newlines.js');
+    var actual = strip(fixture, { preserveNewlines: true });
+    actual.should.equal(expected);
   });
 });
 

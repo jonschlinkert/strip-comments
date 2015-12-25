@@ -19,7 +19,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "extract-comments": "^0.8.5"
+    "extract-comments": "^0.8.7"
   },
   "devDependencies": {
     "mocha": "*",
