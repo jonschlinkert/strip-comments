@@ -93,7 +93,11 @@ function discard(str, comment, opts) {
   if (opts && opts.safe === true && ch === '!') {
     return str;
   }
-  return str.replace(comment.raw, '');
+  var nl = '';
+  if (opts && opts.preserveNewlines) {
+    nl = comment.raw.replace(/[^\r\n]/g, '');
+  }
+  return str.replace(comment.raw, nl);
 }
 
 /**
