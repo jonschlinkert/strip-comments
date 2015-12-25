@@ -5,6 +5,12 @@ var extract = require('extract-comments');
 /**
  * Strip comments from the given `string`.
  *
+ * ```js
+ * //example.strip
+ * console.log(strip("foo // this is a comment\n/* me too *\/"));
+ * //=> 'foo'
+ * ```
+ * @name strip
  * @param {String} `string`
  * @param {Object} `options` Pass `safe: true` to keep comments with `!`
  * @return {String}
@@ -29,6 +35,7 @@ function strip(str, options) {
 /**
  * Strip block comments from the given `string`.
  *
+ * @name .block
  * @param {String} `string`
  * @param {Object} `options` Pass `safe: true` to keep comments with `!`
  * @return {String}
@@ -42,6 +49,7 @@ function block(str, options) {
 /**
  * Strip line comments from the given `string`.
  *
+ * @name .line
  * @param {String} `string`
  * @param {Object} `options` Pass `safe: true` to keep comments with `!`
  * @return {String}
@@ -55,6 +63,7 @@ function line(str, options) {
 /**
  * Strip the first comment from the given `string`.
  *
+ * @name .first
  * @param {String} `string`
  * @param {Object} `options` Pass `safe: true` to keep comments with `!`
  * @return {String}
