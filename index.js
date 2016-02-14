@@ -1,99 +1,179 @@
+/*!
+ * strip-comments <https://github.com/jonschlinkert/strip-comments>
+ *
+ * Copyright (c) 2014-2016, Jon Schlinkert.
+ * Released under the MIT license.
+ */
+
 'use strict';
 
+var extend = require('extend-shallow');
 var extract = require('extract-comments');
 
 /**
- * Strip comments from the given `string`.
+ * Strip all code comments from the given `input`,
+ * including these that are ignored.
+ * Pass `opts.safe: true` to keep them.
+ *
+ * **Example**
  *
  * ```js
- * //example.strip
- * console.log(strip("foo // this is a comment\n/* me too *\/"));
- * //=> 'foo'
+ * var str = strip('foo; // this is a comment\n /* me too *\/');
+ * console.log(str);
+ * // => 'foo; \n '
  * ```
- * @name strip
- * @param {String} `string`
- * @param {Object} `options` Pass `safe: true` to keep comments with `!`
- * @return {String}
- * @api public
- */
-
-function strip(str, options) {
-  options = options || {};
-  if (options.line) {
-    return line(str, options);
-  }
-  if (options.block) {
-    return block(str, options);
-  }
-  if (options.first) {
-    return first(str, options);
-  }
-  str = block(str, options);
-  return line(str, options);
-}
-
-/**
- * Strip block comments from the given `string`.
  *
- * @name .block
- * @param {String} `string`
- * @param {Object} `options` Pass `safe: true` to keep comments with `!`
- * @return {String}
+ * @name  strip
+ * @param  {String} `<input>` string from which to strip comments
+ * @param  {Object} `opts` optional options, passed to [extract-comments][extract-comments]
+ *   @option {Boolean} [opts] `line` if `false` strip only block comments, default `true`
+ *   @option {Boolean} [opts] `block` if `false` strip only line comments, default `true`
+ *   @option {Boolean} [opts] `safe` pass `true` to keep ignored comments (e.g. `/*!` and `//!`)
+ *   @option {Boolean} [opts] `preserveNewlines` if `true` preserve newlines after comments are stripped
+ * @return {String} modified input
  * @api public
  */
 
-function block(str, options) {
-  return stripEach(str, extract.block(str, options), options);
-}
+exports = module.exports = function stripAllComments(input, opts) {
+  opts = extend({block: true, line: true}, opts);
+  return stripComments(input, opts);
+};
 
 /**
- * Strip line comments from the given `string`.
+ * Strip only block comments.
  *
- * @name .line
- * @param {String} `string`
- * @param {Object} `options` Pass `safe: true` to keep comments with `!`
- * @return {String}
+ * **Example**
+ *
+ * ```js
+ * var output = strip('foo; // this is a comment\n /* me too *\/', { line: false });
+ * console.log(output);
+ * // => 'foo; // this is a comment\n '
+ * ```
+ *
+ * **Example**
+ *
+ * ```js
+ * var output = strip.block('foo; // this is a comment\n /* me too *\/');
+ * console.log(output);
+ * // => 'foo; // this is a comment\n '
+ * ```
+ *
+ * @name  .block
+ * @param  {String} `<input>` string from which to strip comments
+ * @param  {Object} `[opts]` pass `opts.safe: true` to keep ignored comments (e.g. `/*!`)
+ * @return {String} modified string
  * @api public
  */
 
-function line(str, options) {
-  return stripEach(str, extract.line(str, options), options);
-}
+exports.block = function stripBlockComments(input, opts) {
+  opts = extend({block: true}, opts);
+  return stripComments(input, opts);
+};
 
 /**
- * Strip the first comment from the given `string`.
+ * Strip only line comments.
+ *
+ * **Example**
+ *
+ * ```js
+ * var output = strip('foo; // this is a comment\n /* me too *\/', { block: false });
+ * console.log(output);
+ * // => 'foo; \n /* me too *\/'
+ * ```
+ *
+ * **Example**
+ *
+ * ```js
+ * var output = strip.line('foo; // this is a comment\n /* me too *\/');
+ * console.log(output);
+ * // => 'foo; \n /* me too *\/'
+ * ```
+ *
+ * @name  .line
+ * @param  {String} `<input>` string from which to strip comments
+ * @param  {Object} `[opts]` pass `opts.safe: true` to keep ignored comments (e.g. `//!`)
+ * @return {String} modified string
+ * @api public
+ */
+
+exports.line = function stripLineComments(input, opts) {
+  opts = extend({line: true}, opts);
+  return stripComments(input, opts);
+};
+
+/**
+ * Strip the first comment from the given `input`.
+ * If `opts.safe: true` is passed, will strip the first that is not ignored.
+ *
+ * **Example**
+ *
+ * ```js
+ * var str = '//! first comment\nfoo; // this is a comment';
+ * var output = strip(str, {
+ *   first: true
+ * });
+ * console.log(output);
+ * // => '\nfoo; // this is a comment'
+ * ```
+ *
+ * **Example**
+ *
+ * ```js
+ * var str = '//! first comment\nfoo; // this is a comment';
+ * var output = strip.first(str, { safe: true });
+ * console.log(output);
+ * // => '//! first comment\nfoo; '
+ * ```
  *
  * @name .first
- * @param {String} `string`
- * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @param {String} `<input>`
+ * @param {Object} `[opts]` pass `opts.safe: true` to keep comments with `!`
  * @return {String}
  * @api public
  */
 
-function first(str, options) {
-  return stripEach(str, extract.first(str), options);
-}
+exports.first = function stripFirstComment(input, opts) {
+  opts = extend({block: true, line: true, first: true}, opts);
+  return stripComments(input, opts);
+};
 
 /**
  * Private function for stripping comments.
  *
- * @param {String} `string`
- * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @param  {String} `<input>`
+ * @param  {Object} `[opts]`
  * @return {String}
+ * @api private
  */
+function stripComments(input, opts) {
+  // strip all by default, including `ingored` comments.
+  opts = extend({
+    block: false,
+    line: false,
+    safe: false,
+    first: false
+  }, opts);
 
-function stripEach(str, comments, options) {
-  comments.forEach(function(comment) {
-    str = discard(str, comment, options);
-  });
-  return str;
+  // important tweak for `extract-comments` it's just the same.
+  opts.keepProtected = opts.safe;
+
+  var comments = extract(input, opts);
+  var len = comments.length;
+  var i = 0;
+
+  while (i < len) {
+    var comment = comments[i++];
+    input = discard(input, comment, opts);
+  }
+  return input;
 }
 
 /**
  * Remove a comment from the given string.
  *
- * @param {String} `string`
- * @param {Object} `options` Pass `safe: true` to keep comments with `!`
+ * @param {String} `str`
+ * @param {Object} `comment`
+ * @param {Object} `opts`
  * @return {String}
  */
 
@@ -106,19 +186,11 @@ function discard(str, comment, opts) {
   if (opts && opts.preserveNewlines) {
     nl = comment.raw.replace(/[^\r\n]/g, '');
   }
-  return str.replace(comment.raw, nl);
+  if (comment.type === 'line') {
+    str = str.replace('//' + comment.raw, nl);
+  }
+  if (comment.type === 'block') {
+    str = str.replace('/*' + comment.raw + '*/', nl);
+  }
+  return str;
 }
-
-/**
- * Expose `strip`
- */
-
-module.exports = strip;
-
-/**
- * Expose methods
- */
-
-module.exports.block = block;
-module.exports.first = first;
-module.exports.line = line;

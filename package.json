@@ -19,11 +19,11 @@
     "test": "mocha"
   },
   "dependencies": {
-    "extract-comments": "^0.8.7"
+    "extend-shallow": "^2.0.1",
+    "extract-comments": "^0.10.1"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*"
+    "mocha": "*"
   },
   "keywords": [
     "block",
@@ -40,6 +40,10 @@
     "strip"
   ],
   "verb": {
+    "toc": true,
+    "plugins": [
+      "gulp-format-md"
+    ],
     "related": {
       "list": [
         "code-context",
@@ -50,9 +54,6 @@
         "parse-comments",
         "snapdragon"
       ]
-    },
-    "plugins": [
-      "gulp-format-md"
-    ]
+    }
   }
 }
