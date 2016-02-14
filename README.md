@@ -38,7 +38,7 @@ Strip all code comments from the given `input`, including these that are ignored
 **Params**
 
 * `<input>` **{String}**: string from which to strip comments    
-* `opts` **{Object}**: optional options, passed to [extract-comments][extract-comments]  
+* `[opts]` **{Object}**: optional options, passed to [extract-comments][extract-comments]  
   - `line` **{Boolean}**: if `false` strip only block comments, default `true`
   - `block` **{Boolean}**: if `false` strip only line comments, default `true`
   - `safe` **{Boolean}**: pass `true` to keep ignored comments (e.g. `/*!` and `//!`)
@@ -53,7 +53,7 @@ console.log(str);
 // => 'foo; \n '
 ```
 
-### [.block](index.js#L66)
+### [.block](index.js#L68)
 Strip only block comments.
 
 **Params**
@@ -66,6 +66,7 @@ Strip only block comments.
 
 ```js
 var output = strip('foo; // this is a comment\n /* me too *\/', { line: false });
+console.log(output);
 // => 'foo; // this is a comment\n '
 ```
 
@@ -73,10 +74,11 @@ or
 
 ```js
 var output = strip.block('foo; // this is a comment\n /* me too *\/');
+console.log(output);
 // => 'foo; // this is a comment\n '
 ```
 
-### [.line](index.js#L95)
+### [.line](index.js#L99)
 Strip only line comments.
 
 **Params**
@@ -89,6 +91,7 @@ Strip only line comments.
 
 ```js
 var output = strip('foo; // this is a comment\n /* me too *\/', { block: false });
+console.log(output);
 // => 'foo; \n /* me too *\/'
 ```
 
@@ -96,10 +99,11 @@ or
 
 ```js
 var output = strip.line('foo; // this is a comment\n /* me too *\/');
+console.log(output);
 // => 'foo; \n /* me too *\/'
 ```
 
-### [.first](index.js#L129)
+### [.first](index.js#L135)
 Strip the first comment from the given `input`. If `opts.safe: true` is passed, will strip the first that is not ignored.
 
 **Params**
@@ -115,6 +119,7 @@ var str = '//! first comment\nfoo; // this is a comment';
 var output = strip(str, {
   first: true
 });
+console.log(output);
 // => '\nfoo; // this is a comment'
 ```
 
@@ -123,6 +128,7 @@ or
 ```js
 var str = '//! first comment\nfoo; // this is a comment';
 var output = strip.first(str, { safe: true });
+console.log(output);
 // => '//! first comment\nfoo; '
 ```
 

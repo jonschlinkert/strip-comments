@@ -46,6 +46,7 @@ exports = module.exports = function stripAllComments(input, opts) {
  *
  * ```js
  * var output = strip('foo; // this is a comment\n /* me too *\/', { line: false });
+ * console.log(output);
  * // => 'foo; // this is a comment\n '
  * ```
  *
@@ -53,6 +54,7 @@ exports = module.exports = function stripAllComments(input, opts) {
  *
  * ```js
  * var output = strip.block('foo; // this is a comment\n /* me too *\/');
+ * console.log(output);
  * // => 'foo; // this is a comment\n '
  * ```
  *
@@ -75,6 +77,7 @@ exports.block = function stripBlockComments(input, opts) {
  *
  * ```js
  * var output = strip('foo; // this is a comment\n /* me too *\/', { block: false });
+ * console.log(output);
  * // => 'foo; \n /* me too *\/'
  * ```
  *
@@ -82,6 +85,7 @@ exports.block = function stripBlockComments(input, opts) {
  *
  * ```js
  * var output = strip.line('foo; // this is a comment\n /* me too *\/');
+ * console.log(output);
  * // => 'foo; \n /* me too *\/'
  * ```
  *
@@ -108,6 +112,7 @@ exports.line = function stripLineComments(input, opts) {
  * var output = strip(str, {
  *   first: true
  * });
+ * console.log(output);
  * // => '\nfoo; // this is a comment'
  * ```
  *
@@ -116,6 +121,7 @@ exports.line = function stripLineComments(input, opts) {
  * ```js
  * var str = '//! first comment\nfoo; // this is a comment';
  * var output = strip.first(str, { safe: true });
+ * console.log(output);
  * // => '//! first comment\nfoo; '
  * ```
  *
