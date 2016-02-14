@@ -154,7 +154,7 @@ function stripComments(input, opts) {
     first: false
   }, opts);
 
-  // important tweak for `extract-comments` it's just the same.
+  // compatibility with `extract-comments`
   opts.keepProtected = opts.safe;
 
   var comments = extract(input, opts);
