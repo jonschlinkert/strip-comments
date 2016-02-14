@@ -1,7 +1,7 @@
 {
   "name": "strip-comments",
   "description": "Strip comments from code. Removes line comments, block comments, the first comment only, or all comments. Optionally leave protected comments unharmed.",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/strip-comments",
@@ -23,6 +23,7 @@
     "extract-comments": "^0.10.1"
   },
   "devDependencies": {
+    "gulp-format-md": "^0.1.5",
     "mocha": "*"
   },
   "keywords": [
@@ -41,6 +42,9 @@
   ],
   "verb": {
     "toc": true,
+    "tasks": [
+      "readme"
+    ],
     "plugins": [
       "gulp-format-md"
     ],
