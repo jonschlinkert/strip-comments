@@ -1,0 +1,21 @@
+test
+
+.editorconfig
+
+# ESLint setup
+.eslintrc.json
+
+# Git info
+.gitattributes
+.gitignore
+
+.travis.yml
+
+.verb.md
+
+bower.json
+
+# Example
+example.js
+
+node_modules
