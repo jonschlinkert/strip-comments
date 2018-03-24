@@ -12,52 +12,56 @@
   "files": [
     "index.js"
   ],
+  "main": "index.js",
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4"
   },
   "scripts": {
     "test": "mocha"
   },
   "dependencies": {
-    "extend-shallow": "^2.0.1",
-    "extract-comments": "^0.10.1"
+    "babel-extract-comments": "^1.0.0",
+    "extend-shallow": "^3.0.2"
   },
   "devDependencies": {
-    "gulp-format-md": "^0.1.5",
-    "mocha": "*"
+    "gulp-format-md": "^1.0.0",
+    "mocha": "^3.5.3"
   },
   "keywords": [
     "block",
+    "block comment",
+    "code comment",
     "comment",
     "comments",
-    "expressions",
+    "javascript",
     "line",
-    "protected",
-    "re",
-    "regex",
-    "regexp",
-    "regular",
+    "line comment",
     "remove",
     "strip"
   ],
   "verb": {
     "toc": true,
+    "layout": "default",
     "tasks": [
       "readme"
     ],
     "plugins": [
       "gulp-format-md"
     ],
+    "helpers": [
+      "./examples/support/helpers.js"
+    ],
     "related": {
       "list": [
+        "babel-extract-comments",
         "code-context",
-        "esprima-extract-comments",
         "extract-comments",
-        "js-comments",
         "parse-code-context",
-        "parse-comments",
-        "snapdragon"
+        "parse-comments"
       ]
+    },
+    "lint": {
+      "reflinks": true
     }
   }
 }

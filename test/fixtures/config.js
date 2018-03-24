@@ -1,4 +1,4 @@
-{
+module.exports = {
   "config": {
     "properties": {
       "device_id": {
