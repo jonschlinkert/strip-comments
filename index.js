@@ -99,7 +99,7 @@ strip.first = function(input, options) {
  * Strip comments
  */
 
-function stripComments(input, options, tried) {
+function stripComments(input, options) {
   if (typeof input !== 'string') {
     throw new TypeError('expected a string');
   }
@@ -107,7 +107,7 @@ function stripComments(input, options, tried) {
   // strip all by default, including `ingored` comments.
   const defaults = { block: false, line: false, safe: false, first: false };
   const opts = assign({}, defaults, options);
-  tried = tried || 0;
+  opts.plugins = ['objectRestSpread'];
 
   if (typeof opts.keepProtected !== 'boolean') {
     opts.keepProtected = opts.safe;
@@ -116,6 +116,7 @@ function stripComments(input, options, tried) {
   try {
     const comments = extract(input, opts);
     let pos = { start: 0, end: 0, removed: 0 };
+    if (!comments) return input;
 
     for (const comment of comments) {
       if (typeof opts.filter === 'function' && opts.filter(comment, opts) === false) {
@@ -129,7 +130,7 @@ function stripComments(input, options, tried) {
       }
     }
   } catch (err) {
-    if (options.verbose) {
+    if (options.silent !== true) {
       throw err;
     }
   }
