@@ -8,24 +8,43 @@
     "Jon Schlinkert (https://github.com/jonschlinkert)"
   ],
   "dependencies": {
-    "extract-comments": "^0.8.5"
+    "babel-extract-comments": "^1.0.0",
+    "extend-shallow": "^3.0.2"
   },
   "devDependencies": {
-    "mocha": "*",
-    "should": "*"
+    "gulp-format-md": "^1.0.0",
+    "mocha": "^3.5.3"
   },
   "keywords": [
     "block",
+    "block comment",
+    "code comment",
     "comment",
     "comments",
-    "expressions",
+    "javascript",
     "line",
-    "protected",
-    "re",
-    "regex",
-    "regexp",
-    "regular",
+    "line comment",
     "remove",
     "strip"
+  ],
+  "version": "0.4.4",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/strip-comments/issues"
+  },
+  "files": [
+    "index.js"
+  ],
+  "ignore": [
+    "actual",
+    "bower_components",
+    "fixtures",
+    "node_modules",
+    "temp",
+    "test",
+    "test.js",
+    "tmp"
+  ],
+  "main": [
+    "index.js"
   ]
 }
