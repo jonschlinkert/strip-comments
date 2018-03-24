@@ -8,12 +8,12 @@
 'use strict';
 
 const assign = Object.assign;
-const extend = require('extend-shallow');
 const extract = require('babel-extract-comments');
 
 /**
- * Strip all code comments from the given `input`, including these that
- * are ignored. Pass `options.safe: true` to keep them.
+ * Strip all code comments from the given `input`, including protected
+ * comments that start with `!`, unless disabled by setting `options.keepProtected`
+ * to true.
  *
  * ```js
  * const str = strip('const foo = "bar";// this is a comment\n /* me too *\/');
@@ -25,34 +25,34 @@ const extract = require('babel-extract-comments');
  * @param  {Object} `options` optional options, passed to [extract-comments][extract-comments]
  * @option {Boolean} [options] `line` if `false` strip only block comments, default `true`
  * @option {Boolean} [options] `block` if `false` strip only line comments, default `true`
- * @option {Boolean} [options] `safe` pass `true` to keep ignored comments (e.g. `/*!` and `//!`)
- * @option {Boolean} [options] `preserveNewlines` if `true` preserve newlines after comments are stripped
+ * @option {Boolean} [options] `keepProtected` Keep ignored comments (e.g. `/*!` and `//!`)
+ * @option {Boolean} [options] `preserveNewlines` Preserve newlines after comments are stripped
  * @return {String} modified input
  * @api public
  */
 
 function strip(input, options) {
-  return stripComments(input, Object.assign({ block: true, line: true }, options));
+  return stripComments(input, assign({ block: true, line: true }, options));
 }
 
 /**
  * Strip only block comments.
+ *
  * ```js
  * const strip = require('..');
  * const str = strip.block('const foo = "bar";// this is a comment\n /* me too *\/');
  * console.log(str);
  * // => 'const foo = "bar";// this is a comment'
  * ```
- *
  * @name  .block
- * @param  {String} `<input>` string from which to strip comments
- * @param  {Object} `[opts]` pass `opts.safe: true` to keep ignored comments (e.g. `/*!`)
+ * @param  {String} `input` string from which to strip comments
+ * @param  {Object} `options` pass `opts.keepProtected: true` to keep ignored comments (e.g. `/*!`)
  * @return {String} modified string
  * @api public
  */
 
 strip.block = function(input, options) {
-  return stripComments(input, Object.assign({ block: true }, options));
+  return stripComments(input, assign({ block: true }, options));
 };
 
 /**
@@ -64,14 +64,14 @@ strip.block = function(input, options) {
  * // => 'const foo = "bar";\n/* me too *\/'
  * ```
  * @name  .line
- * @param  {String} `<input>` string from which to strip comments
- * @param  {Object} `[opts]` pass `opts.safe: true` to keep ignored comments (e.g. `//!`)
+ * @param  {String} `input` string from which to strip comments
+ * @param  {Object} `options` pass `opts.keepProtected: true` to keep ignored comments (e.g. `//!`)
  * @return {String} modified string
  * @api public
  */
 
 strip.line = function(input, options) {
-  return stripComments(input, Object.assign({ line: true }, options));
+  return stripComments(input, assign({ line: true }, options));
 };
 
 /**
@@ -91,7 +91,7 @@ strip.line = function(input, options) {
  */
 
 strip.first = function(input, options) {
-  const opts = Object.assign({ block: true, line: true, first: true }, options);
+  const opts = assign({ block: true, line: true, first: true }, options);
   return stripComments(input, opts);
 };
 
@@ -106,7 +106,7 @@ function stripComments(input, options, tried) {
 
   // strip all by default, including `ingored` comments.
   const defaults = { block: false, line: false, safe: false, first: false };
-  const opts = Object.assign({}, defaults, options);
+  const opts = assign({}, defaults, options);
   tried = tried || 0;
 
   if (typeof opts.keepProtected !== 'boolean') {
@@ -137,12 +137,7 @@ function stripComments(input, options, tried) {
 }
 
 /**
- * Remove a comment from the given string.
- *
- * @param {String} `str`
- * @param {Object} `comment`
- * @param {Object} `opts`
- * @return {String}
+ * Remove a single comment from the given string.
  */
 
 function remove(str, comment, options, pos) {
@@ -157,14 +152,14 @@ function remove(str, comment, options, pos) {
   }
 
   if (comment.type === 'CommentLine' && options.line === true) {
-    const before = str.slice(0, comment.start - pos.removed)
+    const before = str.slice(0, comment.start - pos.removed);
     const after = str.slice(comment.end - pos.removed);
     pos.removed += comment.end - comment.start - nl.length;
     return before + nl + after;
   }
 
   if (comment.type === 'CommentBlock' && options.block === true) {
-    const before = str.slice(0, comment.start - pos.removed)
+    const before = str.slice(0, comment.start - pos.removed);
     const after = str.slice(comment.end - pos.removed);
     pos.removed += comment.end - comment.start - nl.length;
     return before + nl + after;
