@@ -105,9 +105,9 @@ function stripComments(input, options) {
   }
 
   // strip all by default, including `ingored` comments.
-  const defaults = { block: false, line: false, safe: false, first: false };
+  const defaults = { block: false, line: false, safe: false, first: false, plugins: [] };
   const opts = assign({}, defaults, options);
-  opts.plugins = ['objectRestSpread'];
+  opts.plugins.push('objectRestSpread');
 
   if (typeof opts.keepProtected !== 'boolean') {
     opts.keepProtected = opts.safe;
