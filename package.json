@@ -1,7 +1,7 @@
 {
   "name": "strip-comments",
   "description": "Strip comments from code. Removes line comments, block comments, the first comment only, or all comments. Optionally leave protected comments unharmed.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/strip-comments",
@@ -28,6 +28,8 @@
     "mocha": "^3.5.3"
   },
   "keywords": [
+    "babel",
+    "babylon",
     "block",
     "block comment",
     "code comment",
