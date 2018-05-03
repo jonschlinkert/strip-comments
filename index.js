@@ -105,7 +105,17 @@ function stripComments(input, options) {
   }
 
   // strip all by default, including `ingored` comments.
-  const defaults = { block: false, line: false, safe: false, first: false, plugins: [] };
+  const defaults = {
+    // we shouldn't care about this here since our goal is to strip comments,
+    // not transpiling, and this has been a common cause of parsing issues
+    allowReturnOutsideFunction: true,
+    block: false,
+    line: false,
+    safe: false,
+    first: false,
+    plugins: []
+  };
+
   const opts = assign({}, defaults, options);
   opts.plugins.push('objectRestSpread');
 
