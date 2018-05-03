@@ -9,13 +9,15 @@
   ],
   "dependencies": {
     "babel-extract-comments": "^1.0.0",
-    "extend-shallow": "^3.0.2"
+    "babel-plugin-transform-object-rest-spread": "^6.26.0"
   },
   "devDependencies": {
     "gulp-format-md": "^1.0.0",
     "mocha": "^3.5.3"
   },
   "keywords": [
+    "babel",
+    "babylon",
     "block",
     "block comment",
     "code comment",
@@ -27,7 +29,7 @@
     "remove",
     "strip"
   ],
-  "version": "0.4.4",
+  "version": "1.0.1",
   "bugs": {
     "url": "https://github.com/jonschlinkert/strip-comments/issues"
   },
