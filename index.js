@@ -117,7 +117,6 @@ function stripComments(input, options) {
   };
 
   const opts = assign({}, defaults, options);
-  opts.plugins.push('objectRestSpread');
 
   if (typeof opts.keepProtected !== 'boolean') {
     opts.keepProtected = opts.safe;
