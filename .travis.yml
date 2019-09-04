@@ -2,19 +2,12 @@ sudo: false
 os:
   - linux
   - osx
+  - windows
 language: node_js
 node_js:
   - node
+  - '12'
+  - '11'
   - '10'
   - '9'
   - '8'
-  - '7'
-  - '6'
-  - '5'
-  - '4'
-matrix:
-  fast_finish: true
-  allow_failures:
-    - node_js: '0.8'
-    - node_js: '0.12'
-    - node_js: '0.10'

@@ -1,6 +1,6 @@
 {
   "name": "strip-comments",
-  "description": "Strip comments from code. Removes line comments, block comments, the first comment only, or all comments. Optionally leave protected comments unharmed.",
+  "description": "Strip comments from code. Removes line comments, block comments, the first comment only, or all comments. Optionally ignore protected comments.",
   "version": "1.0.2",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
@@ -14,7 +14,7 @@
   ],
   "main": "index.js",
   "engines": {
-    "node": ">=4"
+    "node": ">=8"
   },
   "scripts": {
     "test": "mocha"

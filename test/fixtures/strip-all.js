@@ -17,10 +17,10 @@ var foo = function(/* and these single-line block comment */) {};
  */
 var bar = function(/* and that */) {};
 
-var foo = '//bar baz not a comment';
+var baz = '//bar baz not a comment';
 
 // this single-line line comment
-var baz = function() {
+var qux = function() {
   // this multiline
   // line comment
   var some = true;
