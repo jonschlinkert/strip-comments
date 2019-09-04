@@ -19,12 +19,9 @@
   "scripts": {
     "test": "mocha"
   },
-  "dependencies": {
-    "babel-extract-comments": "^1.0.0"
-  },
   "devDependencies": {
-    "gulp-format-md": "^1.0.0",
-    "mocha": "^3.5.3"
+    "gulp-format-md": "^2.0.0",
+    "mocha": "^6.2.0"
   },
   "keywords": [
     "babel",

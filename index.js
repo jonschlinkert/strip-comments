@@ -6,7 +6,7 @@
 
 'use strict';
 
-const { parse, compile } = require('./parse');
+const { compile } = require('./parse');
 
 /**
  * Strip all code comments from the given `input`, including protected
