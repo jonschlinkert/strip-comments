@@ -1,0 +1,9 @@
+SQL
+Comments in SQL are in single-line-only form, when using two dashes:
+
+
+
+SELECT COUNT(*)
+       FROM Authors
+       WHERE Authors.name = 'Smith'; 
+                                     

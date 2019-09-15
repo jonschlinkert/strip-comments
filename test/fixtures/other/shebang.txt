@@ -1,0 +1,2 @@
+#!/bin/cat
+Hello world!

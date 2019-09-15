@@ -1,0 +1,2 @@
+⍝ Now add the numbers:
+c←a+b ⍝ addition

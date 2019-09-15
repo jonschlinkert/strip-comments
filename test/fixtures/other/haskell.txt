@@ -1,0 +1,4 @@
+{- this is a comment
+on more lines -}
+-- and this is a comment on one line
+putStrLn "Wikipedia"  -- this is another comment

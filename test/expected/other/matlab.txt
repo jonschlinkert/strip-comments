@@ -1,0 +1,11 @@
+MATLAB
+In MATLAB's programming language, the '%' character indicates a single-line comment. Multi line comments are also available via `%{` and `%}` brackets and can be nested, e.g.
+
+
+d = [0 -1 0];
+
+
+seq = d .* (x - c).^n ./(factorial(n))
+
+
+approx = sum(seq)

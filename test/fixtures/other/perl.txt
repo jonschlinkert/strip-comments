@@ -1,0 +1,4 @@
+# A simple example
+#
+my $s = "Wikipedia"; # Sets the variable s to "Wikipedia".
+print $s . "\n";     # Add a newline character after printing
