@@ -1,14 +1,12 @@
 /*!
  * strip-comments <https://github.com/jonschlinkert/strip-comments>
- *
- * Copyright (c) 2014-2016, 2018, Jon Schlinkert.
+ * Copyright (c) 2014-present, Jon Schlinkert.
  * Released under the MIT License.
  */
 
 'use strict';
 
-const assign = Object.assign;
-const extract = require('babel-extract-comments');
+const { compile } = require('./parse');
 
 /**
  * Strip all code comments from the given `input`, including protected
@@ -32,7 +30,7 @@ const extract = require('babel-extract-comments');
  */
 
 function strip(input, options) {
-  return stripComments(input, assign({ block: true, line: true }, options));
+  return compile(input, { ...options, block: true, line: true });
 }
 
 /**
@@ -51,8 +49,8 @@ function strip(input, options) {
  * @api public
  */
 
-strip.block = function(input, options) {
-  return stripComments(input, assign({ block: true }, options));
+strip.block = (input, options) => {
+  return compile(input, { ...options, block: true });
 };
 
 /**
@@ -70,8 +68,8 @@ strip.block = function(input, options) {
  * @api public
  */
 
-strip.line = function(input, options) {
-  return stripComments(input, assign({ line: true }, options));
+strip.line = (input, options) => {
+  return compile(input, { ...options, line: true });
 };
 
 /**
@@ -90,96 +88,8 @@ strip.line = function(input, options) {
  * @api public
  */
 
-strip.first = function(input, options) {
-  const opts = assign({ block: true, line: true, first: true }, options);
-  return stripComments(input, opts);
+strip.first = (input, options) => {
+  return compile(input, { ...options, block: true, line: true, first: true });
 };
-
-/**
- * Strip comments
- */
-
-function stripComments(input, options) {
-  if (typeof input !== 'string') {
-    throw new TypeError('expected a string');
-  }
-
-  // strip all by default, including `ingored` comments.
-  const defaults = {
-    // we shouldn't care about this here since our goal is to strip comments,
-    // not transpiling, and this has been a common cause of parsing issues
-    allowReturnOutsideFunction: true,
-    block: false,
-    line: false,
-    safe: false,
-    first: false,
-    plugins: []
-  };
-
-  const opts = assign({}, defaults, options);
-
-  if (typeof opts.keepProtected !== 'boolean') {
-    opts.keepProtected = opts.safe;
-  }
-
-  try {
-    const comments = extract(input, opts);
-    let pos = { start: 0, end: 0, removed: 0 };
-    if (!comments) return input;
-
-    for (const comment of comments) {
-      if (typeof opts.filter === 'function' && opts.filter(comment, opts) === false) {
-        continue;
-      }
-
-      input = remove(input, comment, opts, pos);
-
-      if (opts.first === true && !isProtected(comment, opts)) {
-        break;
-      }
-    }
-  } catch (err) {
-    if (options.silent !== true) {
-      throw err;
-    }
-  }
-  return input;
-}
-
-/**
- * Remove a single comment from the given string.
- */
-
-function remove(str, comment, options, pos) {
-  let nl = '';
-
-  if (isProtected(comment, options)) {
-    return str;
-  }
-
-  if (options && options.preserveNewlines) {
-    nl = comment.value.replace(/[^\r\n]/g, '');
-  }
-
-  if (comment.type === 'CommentLine' && options.line === true) {
-    const before = str.slice(0, comment.start - pos.removed);
-    const after = str.slice(comment.end - pos.removed);
-    pos.removed += comment.end - comment.start - nl.length;
-    return before + nl + after;
-  }
-
-  if (comment.type === 'CommentBlock' && options.block === true) {
-    const before = str.slice(0, comment.start - pos.removed);
-    const after = str.slice(comment.end - pos.removed);
-    pos.removed += comment.end - comment.start - nl.length;
-    return before + nl + after;
-  }
-
-  return str;
-}
-
-function isProtected(comment, options) {
-  return options && options.keepProtected === true && /^\*?!/.test(comment.value);
-}
 
 module.exports = strip;

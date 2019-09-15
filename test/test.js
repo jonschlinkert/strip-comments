@@ -27,9 +27,9 @@ describe('strip:', function() {
 
   it('should not mistake escaped slashes for comments', function() {
     // see https://github.com/jonschlinkert/extract-comments/issues/12
-    const str = "'foo/bar'.replace(/o\\//, 'g')";
-    const actual = strip.line(str);
-    assert.deepEqual(actual, str);
+    const expected = "'foo/bar'.replace(/o\\//, 'g')";
+    const actual = strip.line(expected);
+    assert.deepEqual(actual, expected);
   });
 
   it('should strip block comments.', function() {
@@ -38,56 +38,48 @@ describe('strip:', function() {
     assert.strictEqual(actual, expected);
   });
 
+  // see https://github.com/jonschlinkert/strip-comments/issues/31
   it('should only strip the first comment', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/31
     const expected = read('test/expected/banner.js');
     const fixture = read('test/fixtures/banner.js');
     const actual = strip.first(fixture);
     assert.strictEqual(actual, expected);
   });
 
+  // see https://github.com/jonschlinkert/strip-comments/issues/31
   it('should strip the first non-protected comment', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/31
     const expected = read('test/expected/banner-protected.js');
     const fixture = read('test/fixtures/banner.js');
     const actual = strip.first(fixture, { keepProtected: true });
     assert.strictEqual(actual, expected);
   });
 
-  it('should not strip non-comments in string literals', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/21
-    const str = read('test/fixtures/config.js');
-    const actual = strip(str);
-    assert.equal(actual, str);
+  // see https://github.com/jonschlinkert/strip-comments/issues/21
+  it('should not strip non-comments in quoted strings 2', function() {
+    const expected = read('test/fixtures/quoted-strings.js');
+    const actual = strip(expected);
+    assert.equal(actual, expected);
   });
 
-  it('should not strip non-comments in quoted strings', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/21
-    const str = read('test/fixtures/quoted-strings.js');
-    const actual = strip(str);
-    assert.equal(actual, str);
-  });
-
+  // see https://github.com/jonschlinkert/strip-comments/issues/18
   it('should not hang on unclosed comments', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/18
-    const str = 'if (accept == \'video/*\') {';
-    const actual = strip(str);
+    const expected = 'if (accept == \'video/*\') {';
+    const actual = strip(expected);
     // fails because using `esprima` under the hood
-    assert.equal(actual, str);
+    assert.equal(actual, expected);
   });
 
   it('should not mangle json', function() {
-    const str = read(path.join(process.cwd(), 'package.json'));
-    const before = JSON.parse(str);
-    const res = strip(str);
+    const expected = read(path.join(process.cwd(), 'package.json'));
+    const before = JSON.parse(expected);
+    const res = strip(expected);
     const after = JSON.parse(res);
-    // fails because using `esprima` under the hood
     assert.deepEqual(before, after);
   });
 
   it('should strip all but not `/*/`', function() {
     const actual = strip("/* I will be stripped */\nvar path = '/this/should/*/not/be/stripped';");
-    const expected = "\nvar path = '/this/should/*/not/be/stripped';";
+    const expected = "var path = '/this/should/*/not/be/stripped';";
     assert.strictEqual(actual, expected);
   });
 
@@ -122,8 +114,8 @@ describe('strip:', function() {
     assert.strictEqual(actual, expected);
   });
 
+  // see https://github.com/jonschlinkert/strip-comments/issues/27
   it('should not break on comments that are substrings of a later comment', function() {
-    // see https://github.com/jonschlinkert/strip-comments/issues/27
     const actual = strip([
       '// this is a substring',
       '// this is a substring of a larger comment',
@@ -146,7 +138,7 @@ describe('error handling:', function() {
       strip(123);
     }
     assert.throws(fixture, TypeError);
-    assert.throws(fixture, /expected a string/);
+    assert.throws(fixture, /expected input to be a string/i);
     cb();
   });
 
@@ -155,7 +147,7 @@ describe('error handling:', function() {
       strip.block(123);
     }
     assert.throws(fixture, TypeError);
-    assert.throws(fixture, /expected a string/);
+    assert.throws(fixture, /expected input to be a string/i);
     cb();
   });
 
@@ -164,7 +156,7 @@ describe('error handling:', function() {
       strip.line(123);
     }
     assert.throws(fixture, TypeError);
-    assert.throws(fixture, /expected a string/);
+    assert.throws(fixture, /expected input to be a string/i);
     cb();
   });
 
@@ -218,7 +210,7 @@ describe('block comments:', function() {
 
   it('should strip block comments before and from a function.', function() {
     const actual = strip.block('/* this is a comment */\nvar bar = function(/*this is a comment*/) {return;};');
-    const expected = '\nvar bar = function() {return;};';
+    const expected = 'var bar = function() {return;};';
     assert.strictEqual(actual, expected);
   });
 

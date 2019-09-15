@@ -1,16 +1,13 @@
-
 'use strict';
-
 
 var foo = function() {};
 
-
 var bar = function() {};
 
-var foo = '//bar baz not a comment';
+var baz = '//bar baz not a comment';
 
 
-var baz = function() {
+var qux = function() {
   
   
   var some = true;
