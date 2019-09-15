@@ -10,7 +10,8 @@
   },
   "license": "MIT",
   "files": [
-    "index.js"
+    "index.js",
+    "parse.js"
   ],
   "main": "index.js",
   "engines": {
@@ -51,7 +52,6 @@
     ],
     "related": {
       "list": [
-        "babel-extract-comments",
         "code-context",
         "extract-comments",
         "parse-code-context",
