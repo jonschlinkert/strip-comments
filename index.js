@@ -96,3 +96,21 @@ strip.first = (input, options) => {
   const opts = { ...options, block: true, line: true, first: true };
   return compile(parse(input, opts), opts);
 };
+
+/**
+ * Parses a string and returns a basic CST (Concrete Syntax Tree).
+ *
+ * ```js
+ * const strip = require('..');
+ * const str = strip.block('const foo = "bar";// this is a comment\n /* me too *\/');
+ * console.log(str);
+ * // => 'const foo = "bar";// this is a comment'
+ * ```
+ * @name  .block
+ * @param  {String} `input` string from which to strip comments
+ * @param  {Object} `options` pass `opts.keepProtected: true` to keep ignored comments (e.g. `/*!`)
+ * @return {String} modified string
+ * @api public
+ */
+
+strip.parse = parse;
