@@ -14,7 +14,7 @@ const strip = require('../index');
 
 const fixture = path.join.bind(path, __dirname, 'fixtures/other');
 const expected = path.join.bind(path, __dirname, 'expected/other');
-const read = src => fs.readFileSync(src, 'utf-8');
+const read = src => fs.readFileSync(src, 'utf-8').replace(/\r*\n/g, '\n');;
 
 describe('other languages', () => {
   it('should strip Ada comments', () => {

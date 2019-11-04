@@ -14,7 +14,7 @@ const strip = require('../index');
 
 const fixture = path.join.bind(path, __dirname, 'fixtures/html');
 const expected = path.join.bind(path, __dirname, 'expected/html');
-const read = src => fs.readFileSync(src, 'utf-8');
+const read = src => fs.readFileSync(src, 'utf-8').replace(/\r*\n/g, '\n');
 
 describe('HTML comments', () => {
   it('should strip HTML comments.', () => {

@@ -13,7 +13,7 @@ const assert = require('assert');
 const strip = require('../index');
 
 const tests = path.join.bind(path, __dirname);
-const read = src => fs.readFileSync(src, 'utf-8');
+const read = src => fs.readFileSync(src, 'utf-8').replace(/\r*\n/g, '\n');;
 
 describe('JavaScript comments', () => {
   it('should strip all comments', () => {
