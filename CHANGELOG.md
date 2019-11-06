@@ -33,23 +33,11 @@ Changelog entries are classified using the following labels _(from [keep-a-chang
 </details>
 
 
-## Unreleased - 2019-09-14
-
-This is an example section. Update this with actual history.
-
-### Changed
-
-- Description of something that was changed.
-
-### Added
-
-- Description of something that was added.
-
 ## [2.0.0] - 2019-09-14
 
 **Changed**
 
-- Refactored again to use a custom parser. It's much faster, and will work with any string that has comments with the same format as JavaScript line and block comments.
+- Refactored again to use a custom parser that is much faster and supports a number of different languages.
 
 ## [1.0.2] - 2018-05-03
 

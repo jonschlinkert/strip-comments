@@ -1,6 +1,6 @@
 {
   "name": "strip-comments",
-  "description": "Strip line and/or block comments from a string. Works with JavaScript, Sass, CSS, Less.js, or any comments with the same format as JavaScript.",
+  "description": "Strip line and/or block comments from a string. Blazing fast, and works with JavaScript, Sass, CSS, Less.js, and a number of other languages.",
   "version": "1.0.2",
   "homepage": "https://github.com/jonschlinkert/strip-comments",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
