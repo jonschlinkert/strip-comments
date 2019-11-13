@@ -11,7 +11,7 @@
   "license": "MIT",
   "files": [
     "index.js",
-    "parse.js"
+    "lib"
   ],
   "main": "index.js",
   "engines": {
