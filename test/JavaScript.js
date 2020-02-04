@@ -16,6 +16,13 @@ const tests = path.join.bind(path, __dirname);
 const read = src => fs.readFileSync(src, 'utf-8').replace(/\r*\n/g, '\n');;
 
 describe('JavaScript comments', () => {
+  it('should work on large content files', () => {
+    const file = read(tests('fixtures/large.less'));
+    const generated = strip(file, {language : 'less'});
+    const stripped = read(tests('expected/strip-large.less'));
+    assert.strictEqual(stripped, generated);
+  });
+
   it('should strip all comments', () => {
     const actual = strip("'foo'; // this is a comment\n/* me too */ var abc = 'xyz';");
     assert.strictEqual(actual, '\'foo\'; \n var abc = \'xyz\';');
