@@ -16,10 +16,10 @@ const tests = path.join.bind(path, __dirname);
 const read = src => fs.readFileSync(src, 'utf-8').replace(/\r*\n/g, '\n');;
 
 describe('JavaScript comments', () => {
-  it('should work on large content files', () => {
-    const file = read(tests('fixtures/large.less'));
+  it('should work on comments which has quotes', () => {
+    const file = read(tests('fixtures/quoted-sting-match.less'));
     const generated = strip(file, {language : 'less'});
-    const stripped = read(tests('expected/strip-large.less'));
+    const stripped = read(tests('expected/strip-quoted-sting-match.less'));
     assert.strictEqual(stripped, generated);
   });
 
