@@ -64,7 +64,7 @@ console.log(str);
 // => 'const foo = "bar";\n'
 ```
 
-For more use-cases see the [tests](./test/test.js)
+For more use-cases see the [tests](./test)
 
 ## API
 
