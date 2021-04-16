@@ -279,3 +279,17 @@ describe('line comments:', () => {
     assert.strictEqual(actual, expected);
   });
 });
+
+describe('performance', () => {
+  it('should not timeout', () => {
+    const actual = strip(`
+      console.log(tpl\`
+        123
+      \`);
+      ${Array(10).fill('console.log(/^http:\\/\\//.test("1"));').join('\n')}\n
+      ${Array(100).fill('console.log("1");').join('\n')}\n
+    `);
+    const expected = actual;
+    assert.strictEqual(actual, expected);
+  }).timeout(500)
+});
