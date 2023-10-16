@@ -50,7 +50,7 @@ Works with:
 * shebang
 * sql
 * swift
-* typscript
+* typescript
 * xml
 
 ## Usage
