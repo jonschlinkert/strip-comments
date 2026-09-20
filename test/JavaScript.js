@@ -255,6 +255,38 @@ describe('line comments:', () => {
     assert.strictEqual(actual, expected);
   });
 
+  // see https://github.com/jonschlinkert/strip-comments/issues/80
+  it('should not strip https URLs in single-quoted strings', () => {
+    const input = [
+      'const obj =  {',
+      "    url: 'https://google.com'",
+      '}'
+    ].join('\n');
+    assert.strictEqual(strip(input), input);
+    assert.strictEqual(strip.line(input), input);
+  });
+
+  it('should not strip protocol-relative URLs in quoted strings', () => {
+    const input = [
+      'const obj =  {',
+      "    url: '//google.com'",
+      '}'
+    ].join('\n');
+    assert.strictEqual(strip(input), input);
+  });
+
+  it('should not strip URLs after empty string literals', () => {
+    const single = "const a = '';\nconst b = 'https://example.com';";
+    const dbl = 'const a = "";\nconst b = "https://example.com";';
+    assert.strictEqual(strip(single), single);
+    assert.strictEqual(strip(dbl), dbl);
+  });
+
+  it('should not treat slashes in regexp character classes as comments', () => {
+    const input = 'const re = /[//]/; // comment';
+    assert.strictEqual(strip(input), 'const re = /[//]/; ');
+  });
+
   it('should strip URLs in a line comment', () => {
     const actual = strip.line('// http://github.com"');
     const expected = '';
