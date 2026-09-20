@@ -121,6 +121,34 @@ describe('JavaScript comments', () => {
     assert.strictEqual(actual, expected);
   });
 
+  // see https://github.com/jonschlinkert/strip-comments/issues/48
+  it('should strip comments after empty double-quoted strings when later strings use the same quotes', () => {
+    const actual = strip('var s3= "";//empty quotes same with the next quotes\nvar s4= "";');
+    const expected = 'var s3= "";\nvar s4= "";';
+    assert.strictEqual(actual, expected);
+  });
+
+  // see https://github.com/jonschlinkert/strip-comments/issues/48
+  it('should strip comments after empty single-quoted strings when later strings use the same quotes', () => {
+    const actual = strip('var s3= \'\';//empty quotes same with the next quotes\nvar s4= \'\';');
+    const expected = 'var s3= \'\';\nvar s4= \'\';';
+    assert.strictEqual(actual, expected);
+  });
+
+  // see https://github.com/jonschlinkert/strip-comments/issues/48
+  it('should strip comments after empty single-quoted strings when later strings use different quotes', () => {
+    const actual = strip('var s1= \'\';//empty quotes not the same with the next quotes\nvar s2= "";');
+    const expected = 'var s1= \'\';\nvar s2= "";';
+    assert.strictEqual(actual, expected);
+  });
+
+  // see https://github.com/jonschlinkert/strip-comments/issues/48
+  it('should strip comments after empty double-quoted strings when later strings use different quotes', () => {
+    const actual = strip('var s1= "";//empty quotes not the same with the next quotes\nvar s2= \'\';');
+    const expected = 'var s1= "";\nvar s2= \'\';';
+    assert.strictEqual(actual, expected);
+  });
+
   // see https://github.com/jonschlinkert/strip-comments/issues/27
   it('should not break on comments that are substrings of a later comment', () => {
     const actual = strip([
