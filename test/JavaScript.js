@@ -16,6 +16,20 @@ const tests = path.join.bind(path, __dirname);
 const read = src => fs.readFileSync(src, 'utf-8').replace(/\r*\n/g, '\n');;
 
 describe('JavaScript comments', () => {
+  it('should preserve source after empty block comments', () => {
+    assert.strictEqual(strip('hello/**/ world'), 'hello world');
+    assert.strictEqual(strip.block('before/**//**/after'), 'beforeafter');
+    assert.strictEqual(strip.first('/**/code/* later */'), 'code/* later */');
+    assert.strictEqual(strip('before/**/after', { language: 'ts' }), 'beforeafter');
+  });
+
+  it('should preserve doc comment and protected comment handling', () => {
+    assert.strictEqual(strip('before/***/after'), 'beforeafter');
+    assert.strictEqual(strip('before/**! license */after'), 'beforeafter');
+    assert.strictEqual(strip('before/**! license */after', { keepProtected: true }), 'before/**! license */after');
+    assert.strictEqual(strip('before/*! license */after', { keepProtected: true }), 'before/*! license */after');
+  });
+
   it('should strip all comments', () => {
     const actual = strip("'foo'; // this is a comment\n/* me too */ var abc = 'xyz';");
     assert.strictEqual(actual, '\'foo\'; \n var abc = \'xyz\';');
